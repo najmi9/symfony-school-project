@@ -1,0 +1,51 @@
+{% extends 'admin/base.html.twig' %}
+
+
+{% block body%}
+
+ {% for item in app.flashes('message') %}
+    <div class="alert alert-info">
+      
+      {{ item }}
+    </div>
+  {% endfor %}
+      <h1>
+      	Les étudiants 
+      </h1>
+      <table class="table">
+      	<thead>
+      	<th></th>
+      	<th> Name</th>
+      	<th>Numéro</th>
+      	<th>Etat</th>
+      	<th> Bac Suité </th>
+      	<th> Niveau Scolaire </th>
+      	<th>notes</th>
+      	
+      	<th></th>
+      	</thead>
+      	<tbody>
+
+      {% for item in students %}
+
+      	<tr>
+      	
+      		
+           <td> <img src="{{ item.stdperinfo.picture }}" /></td>
+           <td> {{ item.stdperinfo.name}} </td>
+           <td>{{ item.profile.number }}</td>
+           <td>{{ item.profile.state }}</td>
+           <td>  {{ item.stdchoice.bactype }}</td>
+           <td> {{ item.stdcv.level}} </td>
+           <td>{{ item.profile.notes }}</td>
+
+           <td><a href="" class="btn btn-danger sm"><i class="fas fa-trash"></i></a>
+         <a href="" class="btn btn-warning sm"><i class="fas fa-edit"></i></a>
+           </td>
+         </tr> 
+      {% endfor %}
+</tbody>
+
+      </table>
+
+  {% endblock %}

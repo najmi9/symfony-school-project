@@ -1,23 +1,68 @@
 security:
-    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+
+  
+    encoders:
+       App\Entity\StdPerInfo:
+          algorithm: auto
+
+       App\Entity\Prof:
+          algorithm: auto
     providers:
-        users_in_memory: { memory: null }
+        app_prof_provider:
+          entity: 
+            class:  App\Entity\Prof
+            property: email
+        app_user_provider:
+          entity: 
+            class:  App\Entity\StdPerInfo
+            property: email
+
+           # used to reload user from session & other features (e.g. switch_user)
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        prof:
+            pattern: ^/prof
+            anonymous: true
+            provider:
+                app_prof_provider
+            form_login:
+                login_path: app_prof_login
+                check_path: app_prof_login
+            logout: 
+                path: app_prof_logout
+                target: prof
+        student:
+            anonymous: true
+            provider:
+                app_user_provider
+            form_login:
+                login_path: app_user_login
+                check_path: app_user_login
+            logout: 
+                path: app_user_logout
+                target: home
+                
         main:
-            anonymous: lazy
-            provider: users_in_memory
+            pattern: ^/admin
+            anonymous: true
+    
+                # target: app_any_route
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 
             # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
+            #  switch_user: true
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/prof/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/prof, roles: ROLE_PROF}
+        - { path: ^/student/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/student/inscription, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/student, roles: IS_AUTHENTICATED_FULLY}
+        - { path: ^/admin, roles: ROLE_ADMIN }
+      
