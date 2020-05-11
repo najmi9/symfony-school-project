@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\StudentRepository;
 use App\Repository\StdPerInfoRepository;
 use App\Entity\StdPerInfo;
 use App\Form\StdPerInfoType;
@@ -32,12 +33,16 @@ class InscriptionController extends AbstractController
        
               $std = new StdPerInfo();
               $finStd = new Student();
-       
+              //Default state for the student, edited by th eadmin  
+              $stdProfile = new StdProfile();
+                $stdProfile->setState('NOT VERIFIED')
+                           ->setNumber('TODO')
+                           ->setNotes(0);
               $form = $this->createForm(StdPerInfoType::class, $std);
               $form->handleRequest($request);
        
               if ($form->isSubmitted() && $form->isValid()) {
-                  dd($request->request);
+                //  dd($request->request);
                  // encode the plain password
                    $std->setPassword(
                        $passwordEncoder->encodePassword(
@@ -45,10 +50,19 @@ class InscriptionController extends AbstractController
                            $form->get('password')->getData()
                        )
                    );
+
+     
+
+      
+      
+            
+
        
                   $finStd->setStdperinfo($std);
+                  $finStd->setProfile($stdProfile);
                    $manager->persist($std);
                   $manager->persist($finStd);
+                     $manager->persist($stdProfile);
                    $manager->flush();
                    
                    $this->addFlash('message', 'Ok, You are added successfly, Please Verify your email to continue !');
@@ -61,21 +75,22 @@ class InscriptionController extends AbstractController
 
 
      /**
+     * @IsGranted("ROLE_USER")
      * @Route("/student/inscription/edit/{id}", name="inscription_edit")
      */
     public function editInscription($id, Request $request, 
-      EntityManagerInterface $manager
+      EntityManagerInterface $manager, StudentRepository $finstdRepo
     , UserPasswordEncoderInterface $passwordEncoder, StdPerInfoRepository $stdRepo)
     {
        
              $std = $stdRepo->findOneById($id);
-            
+             $finStd =  $finstdRepo->findOneByStdperinfo($std);
        
               $form = $this->createForm(StdPerInfoType::class, $std);
               $form->handleRequest($request);
        
               if ($form->isSubmitted() && $form->isValid()) {
-                  dd($request->request);
+                  //dd($request->request);
 
                 //la modification des informations et de Vérification de l'email
 
@@ -165,11 +180,11 @@ class InscriptionController extends AbstractController
      /**
      * @IsGranted("ROLE_USER")
      * @Route("/student/choice/{id}", name="choice_student")
-     */
-    
-    public function studentChoice(Request $request, StdCv $stdCv, EntityManagerInterface $manager)
+     */   
+    public function studentChoice(Request $request, StdPerInfo $stdperinfo, EntityManagerInterface $manager)
     {
-      $finStd = $manager->getRepository(Student::class)->findOneByStdcv($stdCv);
+      $finStd = $manager->getRepository(Student::class)->findOneByStdperinfo($stdperinfo);
+
       if ($finStd->getStdchoice()) {
        $stdChoice = $finStd->getStdchoice();
          $form = $this->createForm(StdChoiceType::class, $stdChoice);
@@ -208,30 +223,6 @@ class InscriptionController extends AbstractController
         ]);
     }
 
-     /**
-     * @IsGranted("ROLE_USER")
-     * @Route("compte/student/{id}", name="profile_student")
-     */
-    
-    public function studentProfile(StdChoice $stdPerInfo, EntityManagerInterface $manager)
-    {
-      $finStd = $manager->getRepository(Student::class)->findOneByStdchoice($stdPerInfo);
+  }
 
-    	$stdProfile = new StdProfile();
-
-      $stdProfile->setState('TODO')
-      ->setNumber('TODO')
-      ->setNotes(0);
-      $finStd->setProfile($stdProfile);
-      $manager->persist($finStd);
-      $manager->persist($stdProfile);
-      $manager->flush();
-
-  
-      
-        return $this->redirectToRoute('profile', ['id'=>$stdPerInfo->getId()]);
-        //return $this->render('inscription/profile.html.twig',[
-  // 'res'=>$finStd
-      //  ]);
-    }
-}
+     

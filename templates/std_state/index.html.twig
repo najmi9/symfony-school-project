@@ -37,6 +37,7 @@
     	</table>
     </div>
      <div class="container alert alert-info">
+
     	<h1 class="alert-heading">Cursur Accadémique :  </h1>
         <a href="{{ path('cv_student', {'id': stdInfo.id}) }}"
        class="btn btn-small btn-warning  ml-auto" 
@@ -62,23 +63,29 @@
 
     	</table>
     </div>
+
     <div class="container alert alert-warning">
-         {% if stdChoice.bactype is defined %}
-    	      <h4 class="alert-heading">Votre Choix de cette Année est :  
-              <h3> {{stdChoice.bactype}} </h3>
-            <a href="{{ path('choice_student', {'id': stdCv.id}) }}"
-            class="btn btn-small btn-warning  ml-auto" ><i class="fas fa-edit"></i></a> </h4>
+
+          <h4 class="alert-heading">Votre Choix de cette Année est :  </h4>
+         {% if stdChoice.bactype is defined %}   	     
+              <h3 class="alert-heading"> {{stdChoice.bactype}} </h3>            
          {% else %}
-            <h4 class="alert-heading">Votre Choix de cette Année est : NOT DEFINED
-            </h4>
+            <h3 class="alert-heading"> NOT DEFINED </h3>            
          {% endif %}
+           <a href="{{ path('choice_student', {'id': stdInfo.id}) }}"
+       class="btn btn-small btn-warning  ml-auto" 
+        ><i class="fas fa-edit"></i></a>
     </div>
 
-   <div class="p-5">
+   <div class="block">
    	   <h2 class="alert alert-secondary">
-   	   	Votre Classe Enttendu est :
+   	   	L'état de votre demanede :
         {% if stdProfile.id is defined %} 
-   	   	{{ stdProfile.state }}
+        <span style="border: 2px solid red;">
+              {{ stdProfile.state }} 
+        </span>
+   	 
+
        {% else %}
         NOT DEFINED 
     {% endif %}

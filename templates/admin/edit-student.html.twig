@@ -1,0 +1,29 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Prof{% endblock %}
+
+{% block body %}
+	<div class="container">
+		   <div class="container">
+		   	   <table class="table">
+		   	   	 <thead>
+		   	   	 	<th>Image</th>
+		   	   	 	<th>Nom </th>
+		   	   	 	<th> C.N.E </th>
+		   	   	 	<th> C.I.N</th>
+		   	   	 </thead>
+		   	   	 <tbody>
+		   	   	 	<td><img src=" {{ info.picture }} "></td>
+		   	   	 	<td>  {{ info.name }} </td>
+		   	   	 	<td> {{ info.cne }} </td>
+		   	   	 	<td> {{ info.cin }} </td>
+		   	   	 </tbody>
+		   	   </table>
+           </div>
+           <div class="container">
+
+               {{ form(profileForm) }}
+   
+           </div>
+    </div>
+{% endblock %}

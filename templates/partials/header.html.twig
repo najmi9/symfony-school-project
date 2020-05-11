@@ -11,10 +11,15 @@
       <li class="nav-item">
         <a class="nav-link" href="#">Features</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Pricing</a>
-      </li>
-   </ul>     
+
+      {% if is_granted("ROLE_PROF") %}
+         <li class="nav-item">
+           <a class="nav-link" href="{{ path('prof_add_course') }}">Cours<i class="fas fa-plus"></i></a>
+        </li>
+     {% endif %}
+     
+   </ul>  
+
  {% if app.user %}
 
    <ul class="navbar-nav ml-auto">
@@ -32,10 +37,11 @@
 
           <a class="dropdown-item" href="{{ path('setings' )}}">Settings</a>
           <a class="dropdown-item" href="{{ path('app_user_logout') }}">Déconnexion</a>
-         {% else %}
-         <a class="dropdown-item" href="#">Mon compte</a>
 
-          <a class="dropdown-item" href="#">Settings</a>
+         {% elseif app.user.id %}
+         <a class="dropdown-item" href="{{  path('prof_profile',{'id': app.user.id}) }}">Mon compte</a>
+
+          <a class="dropdown-item" href="{{ path('prof')}}">Settings</a>
           <a class="dropdown-item" href="{{ path('app_prof_logout') }}">Déconnexion</a>
 
           {% endif %} 

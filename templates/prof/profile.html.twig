@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+  <div class="container">
+	{% for classe in classes %}
+
+   <h1> le nom de la classe : {{ classe.name }}</h1>
+
+ <h1> le nombre d'étudiants : {{ classe.stds_nub }}</h1>
+
+	{% endfor %}
+</div>
+{% endblock %}
