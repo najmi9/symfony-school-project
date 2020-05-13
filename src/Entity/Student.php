@@ -48,9 +48,27 @@ class Student
      */
     private $classes;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Note::class, mappedBy="student")
+     */
+    private $notes;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Prof::class, mappedBy="students")
+     */
+    private $profs;
+
+    /**
+     * @ORM\OneToOne(targetEntity=User::class, inversedBy="student", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
     public function __construct()
     {
         $this->classes = new ArrayCollection();
+        $this->notes = new ArrayCollection();
+        $this->profs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -125,4 +143,77 @@ class Student
 
         return $this;
     }
+
+    /**
+     * @return Collection|Note[]
+     */
+    public function getNotes(): Collection
+    {
+        return $this->notes;
+    }
+
+    public function addNote(Note $note): self
+    {
+        if (!$this->notes->contains($note)) {
+            $this->notes[] = $note;
+            $note->setStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeNote(Note $note): self
+    {
+        if ($this->notes->contains($note)) {
+            $this->notes->removeElement($note);
+            // set the owning side to null (unless already changed)
+            if ($note->getStudent() === $this) {
+                $note->setStudent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Prof[]
+     */
+    public function getProfs(): Collection
+    {
+        return $this->profs;
+    }
+
+    public function addProf(Prof $prof): self
+    {
+        if (!$this->profs->contains($prof)) {
+            $this->profs[] = $prof;
+            $prof->addStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProf(Prof $prof): self
+    {
+        if ($this->profs->contains($prof)) {
+            $this->profs->removeElement($prof);
+            $prof->removeStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+
 }

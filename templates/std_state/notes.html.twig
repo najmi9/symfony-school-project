@@ -1,0 +1,37 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion au site{% endblock %}
+
+{% block body %}
+ {% for label, messages in app.flashes %}
+    <div class="container">
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                <p>{{ message | raw }}</p>
+            {% endfor %}
+        </div>
+{% endfor %}
+<div class="container">
+      <table class="table"> 
+      	<thead>
+      		<th>Prof : </th>
+      		<th> Note : </th>
+      	</thead>
+      	<tbody>
+      		{% for mynote in notes %}
+                <tr>
+                	<td> {{ mynote.prof.matter}} </td>
+                	<td> {{ mynote.note }} </td>
+                </tr>
+      		{% endfor %}
+      		<tr>
+      			<td colspan="2" class="text-center">
+      				la moyen :
+      				{{ total | format_number }}
+      			</td>
+      		</tr>
+      	</tbody>
+      </table>
+</div>
+{% endblock %}

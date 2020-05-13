@@ -1,11 +1,48 @@
 
 {% extends 'base.html.twig' %}
 
-{% block title %}Connexion au site{% endblock %}
+{% block title %}Profile| NajmiAccademy.com{% endblock %}
 
 {% block body %}
-
+ {% for label, messages in app.flashes %}
+    <div class="container">
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                <p>{{ message | raw }}</p>
+            {% endfor %}
+        </div>
+{% endfor %}
 <div class="container">
 
+  {% for prof in profs %}
+  	{% for course in prof.courses %}
+  		<section>
+  <h2> Cours {{ course.id }} de Matière : {{prof.matter}}</h2>
+      <div class="container">
+      	<h1> {{ course.title }} </h1> <h4>crée par : {{ prof.name }} </h4> à : <small>  {{ course.createdAt | date }} </small>
+      	<div>
+      		<img src="{{ course.picture }}">
+      	</div>
+      	<div>
+      		<p> {{ course.content }} </p>
+      	</div>
+      </div>
+      </section>
+  	{% endfor %}
+
+  	{% for anounce in prof.anounces %}
+  		<section> 
+  			<h2> Anounce  {{anounce.id}} de Matière : {{ prof.matter }} </h2>
+      <div class="container">
+      	<h1> {{ anounce.title }} </h1> <h4>crée par : {{ prof.name }} </h4> à : <small>  {{ anounce.createdAt | date }} </small>
+      
+      	<div>
+      		<p> {{ anounce.content }} </p>
+      	</div>
+      </div>
+      </section>
+  	{% endfor %}
+  
+  {% endfor %}
 </div>
 {% endblock %}

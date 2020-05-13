@@ -11,10 +11,12 @@ use App\Repository\ProfRepository;
 use App\Repository\ClasseRepository;
 use App\Form\StdProfileType;
 use App\Form\ProfType;
+use App\Form\ClasseFormType;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Prof;
 use App\Entity\Student;
+use App\Entity\Classe;
 
 /**
  * @IsGranted("ROLE_ADMIN")
@@ -43,8 +45,7 @@ class AdminController extends AbstractController
     }
     
     /**
-     * @Route("/admin/student/profile/{id}", name="admin_edit_profile_student")
-     * @return [type] [description]
+     * @Route("/admin/student/profile/edit/{id}", name="admin_edit_profile_student")
      */
     public function editStudentProfile(Student $std, Request $request, EntityManagerInterface $manager)
     {
@@ -55,23 +56,24 @@ class AdminController extends AbstractController
               $form->handleRequest($request);
        
               if ($form->isSubmitted() && $form->isValid()) {
-                //dd($request->request->get('std_profile')['state']);
-              $stdProfile->setState($request->request->get('std_profile')['state'])
-                        ->setNumber($request->request->get('std_profile')['number'])
-                         ->setNotes($request->request->get('std_profile')['notes']);
+                $data = $request->request->get('std_profile');
+              $stdProfile->setState($data['state'])
+                        ->setNumber($data['number'])
+                         ->setNotes($data['notes']);
                  
                   $std->setProfile($stdProfile);
                   $manager->persist($std);
 
                    $manager->flush();
                    
-                   $this->addFlash('message', 'Ok, User edited successfly');
+                   $this->addFlash('success', 'Ok, User edited successfly');
                    return $this->redirectToRoute('admin_students');
               }
 
               return $this->render("admin/edit-student.html.twig",[
         'profileForm'=>$form->createView(),
-        'info'=>$std->getStdperinfo()
+        'info'=>$std->getStdperinfo(),
+        'user'=>$std->getUser()
               ]);
     }
 
@@ -86,7 +88,7 @@ class AdminController extends AbstractController
 
                    $manager->flush();
                    
-                   $this->addFlash('message', 'Ok, User removed successfly');
+                   $this->addFlash('success', 'Ok, User removed successfly');
                    return $this->redirectToRoute('admin_students');
     }
 
@@ -94,29 +96,55 @@ class AdminController extends AbstractController
 
    /**
     * @Route("/admin/prof/new", name="admin_new_prof")
+    * @Route("/admin/prof/edit/{id}", name="admin_edit_prof")
     */
-    public function new(Request $request, EntityManagerInterface $manager, ClasseRepository $classes, UserPasswordEncoderInterface $passwordEncoder) 
+    public function newProf(Prof $prof=null, Request $request, EntityManagerInterface $manager, ClasseRepository $classes, UserPasswordEncoderInterface $passwordEncoder) 
     {
-        $prof = new Prof();
-        $classe = $classes->findAll();
+        if ($prof) {
+           $form=$this->createForm(ProfType::class, $prof);
+           $form->handleRequest($request);    
+        if ($form->isSubmitted() && $form->isValid()) {  
+          
+         $prof->setPassword($passwordEncoder->encodePassword($prof, $form->get('password')->getData()));
 
+          $manager->persist($prof);
+          $manager->flush();
+          $this->addFlash('success', 'the prof has been edited successfly !');
+          return $this->redirectToRoute('admin_profs');
+        }
+        } else {
+          $prof = new Prof();
         $form=$this->createForm(ProfType::class, $prof);
         $form->handleRequest($request);    
         if ($form->isSubmitted() && $form->isValid()) {  
           
          $prof->setPassword($passwordEncoder->encodePassword($prof, $form->get('password')->getData()));
 
-        	$manager->persist($prof);
-        	$manager->flush();
-        	$this->addFlash('message', 'the prof has been added successfly !');
-        	return $this->redirectToRoute('admin_profs');
+          $manager->persist($prof);
+          $manager->flush();
+          $this->addFlash('success', 'the prof has been added successfly !');
+          return $this->redirectToRoute('admin_profs');
         }
+        }
+        
+       
         return $this->render('admin/prof.html.twig',[
        'profForm'=>$form->createView()
       ]);
      }
 
+  /**
+   * @Route("/admin/prof/remove/{id}", name="admin_remove_prof")
+   */
 
+ public function removeProf(Prof $prof, EntityManagerInterface $manager)
+ {
+      $manager->remove($prof);
+      $manager->flush();
+       $this->addFlash('success', 'the prof has been elimited successfly !');
+          return $this->redirectToRoute('admin_profs');
+
+ }
 
      /**
       * @Route("/admin/profs", name="admin_profs")
@@ -141,13 +169,62 @@ class AdminController extends AbstractController
      }
      
      /**
-      * @Route("/admin/class/edit/{id}", name="admin_edit_class")
+      * @Route("/admin/classe/new", name="admin_add_class")
+      * @Route("/admin/classe/edit/{id}", name="admin_edit_class")
       */
-     public function editClass()
-     {
+     public function editClass(Classe $classe = null, Request $request, EntityManagerInterface $manager, ClasseRepository $classes, ProfRepository $profRepo, StudentRepository $stdRepo) 
+    {
+        if ($classe) {
+            $form=$this->createForm(ClasseFormType::class, $classe);
+            $form->handleRequest($request);  
+   
+        if ($form->isSubmitted() && $form->isValid()) {  
+          $data = $request->request->get('classe_form');
+         
+           $classe->setName($data['name']);
+           foreach ($data['profs'] as $prof) {
+            $classe->addProf($profRepo->findOneById($prof));
+            $manager->persist($classe);
+           }
+            foreach ($data['students'] as $prof) {
+            $classe->addStudent($stdRepo->findOneById($prof));
+            $manager->persist($classe);
 
-      return $this->render("admin/edit-class.html.twig",[
+           }
+                 
+          $manager->persist($classe);
+
+          $manager->flush();
+          $this->addFlash('success', 'the classe has been edited successfly !');
+          return $this->redirectToRoute('admin_classes');
+        }
+        } else {
+          $classe= new Classe();
+          $form=$this->createForm(ClasseFormType::class, $classe);
+          $form->handleRequest($request);  
+          if ($form->isSubmitted() && $form->isValid()) {  
+             $manager->persist($classe);
+             $manager->flush();
+             $this->addFlash('success', 'the classe has been added successfly !');
+             return $this->redirectToRoute('admin_classes');
+          }   
+
+        }
+        
+        
+      return $this->render("admin/edit-classe.html.twig",[
           'classForm'=>$form->createView()
+      ]);
+     }
+
+     /**
+      * @Route("/admin/classe/remove/{id}", name="admin_remove_class")
+      */
+     public function remeveClasse(Classe $class, EntityManagerInterface $repo, ClasseRepository $classeRepo){
+      $repo->remove($class);
+      $repo->flush();
+      return $this->render("admin/classes.html.twig",[
+   'classes'=>$classeRepo->findAll()
       ]);
      }
 }

@@ -3,19 +3,24 @@
 {% block title %}Prof{% endblock %}
 
 {% block body %}
+	{% for item in app.flashes('message') %}
+   <div class="alert alert-secondary">
+       {{ item }}
+   </div>
+ {% endfor %}
 	<div class="container">
 		   <div class="container">
 		   	   <table class="table">
 		   	   	 <thead>
 		   	   	 	<th>Image</th>
 		   	   	 	<th>Nom </th>
-		   	   	 	<th> C.N.E </th>
+		   	   	 	<th> Email </th>
 		   	   	 	<th> C.I.N</th>
 		   	   	 </thead>
 		   	   	 <tbody>
-		   	   	 	<td><img src=" {{ info.picture }} "></td>
-		   	   	 	<td>  {{ info.name }} </td>
-		   	   	 	<td> {{ info.cne }} </td>
+		   	   	 	<td><img src=" {{ user.picture }} "></td>
+		   	   	 	<td>  {{ user.name }} </td>
+		   	   	 	<td> {{ user.email }} </td>
 		   	   	 	<td> {{ info.cin }} </td>
 		   	   	 </tbody>
 		   	   </table>

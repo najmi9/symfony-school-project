@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+	<div class="container">
+ <table class="table table-striped">
+      <thead>
+        <th>#ID</th>
+        <th>Image</th>
+        <th>Name</th>
+        <th>C.I.N</th>
+        <th>Filière</th>
+        <th>Moyen</th>
+        <th></th>
+      </thead>
+      <tbody>
+     {% for std in stds %}
+       <tr>
+         <td> {{ std.id }} </td>
+         <td> <img src="{{ std.user.picture }}" /> </td>
+         <td> {{ std.user.name }} </td>
+         <td> {{ std.stdperinfo.cin }} </td>
+         <td> {{ std.stdchoice.bactype }} </td>
+         <td>
+            {% for note in std.notes %}
+                 
+              {% if note.prof == app.user %}
+                     {{ note.note }}
+                   {#  <a href="{{ path('prof_add_note') }}" class="btn btn-primary ">
+                                          <i class="fas fa-plus"></i>
+                                      </a> #}
+                   <a href="{{ path('prof_edit_note',{'id':note.id}) }}"class="        btn btn-success ">
+                          <i class="fas fa-edit"></i>
+                   </a>                           
+               
+            {% endif %}
+            {% endfor %}     
+         </td>
+       </tr>
+     {% endfor %}
+ 
+ </tbody>
+</table>
+	</div>
+{% endblock %}

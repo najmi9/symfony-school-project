@@ -1,0 +1,13 @@
+1- Pagination
+3- Voir come utilisateur ou prof
+4- Notification
+
+chaque std ---> profs, : Ne fait pas
+
+chaque prof----->stds // l'admin à faire . --> Editer un prof par ajoutement de stds
+
+----------------------------------------
+chaque std ------> des notes, chaque note liée à un prof : juste l'afficher
+----------------------------------------
+
+chaque prof ------> stds, chaque std------> note // prof à faire . --> editer un std

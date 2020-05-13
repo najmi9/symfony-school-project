@@ -43,11 +43,6 @@ class Prof implements UserInterface
     private $salaire;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Classe::class, inversedBy="profs")
-     */
-    private $classes;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $password;
@@ -67,8 +62,38 @@ class Prof implements UserInterface
      */
     private $picture;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Course::class, mappedBy="prof", orphanRemoval=true)
+     */
+    private $courses;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Anounce::class, mappedBy="prof")
+     */
+    private $anounces;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Note::class, mappedBy="prof")
+     */
+    private $notes;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Student::class, inversedBy="profs")
+     */
+    private $students;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Classe::class, inversedBy="profs")
+     */
+    private $classes;
+    
+
     public function __construct()
     {
+        $this->courses = new ArrayCollection();
+        $this->anounces = new ArrayCollection();
+        $this->notes = new ArrayCollection();
+        $this->students = new ArrayCollection();
         $this->classes = new ArrayCollection();
     }
 
@@ -121,32 +146,6 @@ class Prof implements UserInterface
     public function setSalaire(string $salaire): self
     {
         $this->salaire = $salaire;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Classe[]
-     */
-    public function getClasses(): Collection
-    {
-        return $this->classes;
-    }
-
-    public function addClass(Classe $class): self
-    {
-        if (!$this->classes->contains($class)) {
-            $this->classes[] = $class;
-        }
-
-        return $this;
-    }
-
-    public function removeClass(Classe $class): self
-    {
-        if ($this->classes->contains($class)) {
-            $this->classes->removeElement($class);
-        }
 
         return $this;
     }
@@ -232,4 +231,150 @@ class Prof implements UserInterface
 
          return $this;
      }
+
+     /**
+      * @return Collection|Course[]
+      */
+     public function getCourses(): Collection
+     {
+         return $this->courses;
+     }
+
+     public function addCourse(Course $course): self
+     {
+         if (!$this->courses->contains($course)) {
+             $this->courses[] = $course;
+             $course->setProf($this);
+         }
+
+         return $this;
+     }
+
+     public function removeCourse(Course $course): self
+     {
+         if ($this->courses->contains($course)) {
+             $this->courses->removeElement($course);
+             // set the owning side to null (unless already changed)
+             if ($course->getProf() === $this) {
+                 $course->setProf(null);
+             }
+         }
+
+         return $this;
+     }
+
+     /**
+      * @return Collection|Anounce[]
+      */
+     public function getAnounces(): Collection
+     {
+         return $this->anounces;
+     }
+
+     public function addAnounce(Anounce $anounce): self
+     {
+         if (!$this->anounces->contains($anounce)) {
+             $this->anounces[] = $anounce;
+             $anounce->setProf($this);
+         }
+
+         return $this;
+     }
+
+     public function removeAnounce(Anounce $anounce): self
+     {
+         if ($this->anounces->contains($anounce)) {
+             $this->anounces->removeElement($anounce);
+             // set the owning side to null (unless already changed)
+             if ($anounce->getProf() === $this) {
+                 $anounce->setProf(null);
+             }
+         }
+
+         return $this;
+     }
+
+     /**
+      * @return Collection|Note[]
+      */
+     public function getNotes(): Collection
+     {
+         return $this->notes;
+     }
+
+     public function addNote(Note $note): self
+     {
+         if (!$this->notes->contains($note)) {
+             $this->notes[] = $note;
+             $note->setProf($this);
+         }
+
+         return $this;
+     }
+
+     public function removeNote(Note $note): self
+     {
+         if ($this->notes->contains($note)) {
+             $this->notes->removeElement($note);
+             // set the owning side to null (unless already changed)
+             if ($note->getProf() === $this) {
+                 $note->setProf(null);
+             }
+         }
+
+         return $this;
+     }
+
+     /**
+      * @return Collection|Student[]
+      */
+     public function getStudents(): Collection
+     {
+         return $this->students;
+     }
+
+     public function addStudent(Student $student): self
+     {
+         if (!$this->students->contains($student)) {
+             $this->students[] = $student;
+         }
+
+         return $this;
+     }
+
+     public function removeStudent(Student $student): self
+     {
+         if ($this->students->contains($student)) {
+             $this->students->removeElement($student);
+         }
+
+         return $this;
+     }
+
+     /**
+      * @return Collection|Classe[]
+      */
+     public function getClasses(): Collection
+     {
+         return $this->classes;
+     }
+
+     public function addClass(Classe $class): self
+     {
+         if (!$this->classes->contains($class)) {
+             $this->classes[] = $class;
+         }
+
+         return $this;
+     }
+
+     public function removeClass(Classe $class): self
+     {
+         if ($this->classes->contains($class)) {
+             $this->classes->removeElement($class);
+         }
+
+         return $this;
+     }
+
 }

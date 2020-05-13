@@ -20,7 +20,7 @@ class StdCv
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $level;
+    private $city;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -33,9 +33,9 @@ class StdCv
     private $year;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="float", length=255)
      */
-    private $diplomes;
+    private $moyen;
 
     /**
      * @ORM\OneToOne(targetEntity=Student::class, mappedBy="stdcv", cascade={"persist", "remove"})
@@ -47,14 +47,14 @@ class StdCv
         return $this->id;
     }
 
-    public function getLevel(): ?string
+    public function getCity(): ?string
     {
-        return $this->level;
+        return $this->city;
     }
 
-    public function setLevel(string $level): self
+    public function setCity(string $city): self
     {
-        $this->level = $level;
+        $this->city = $city;
 
         return $this;
     }
@@ -83,14 +83,14 @@ class StdCv
         return $this;
     }
 
-    public function getDiplomes(): ?string
+    public function getMoyen(): ?string
     {
-        return $this->diplomes;
+        return $this->moyen;
     }
 
-    public function setDiplomes(string $diplomes): self
+    public function setMoyen(string $moyen): self
     {
-        $this->diplomes = $diplomes;
+        $this->moyen = $moyen;
 
         return $this;
     }

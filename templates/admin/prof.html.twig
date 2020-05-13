@@ -3,6 +3,11 @@
 {% block title %}Prof{% endblock %}
 
 {% block body %}
+	{% for item in app.flashes('message') %}
+   <div class="alert alert-secondary">
+       {{ item }}
+   </div>
+ {% endfor %}
 <div class="container">
 
 {{ form(profForm) }}

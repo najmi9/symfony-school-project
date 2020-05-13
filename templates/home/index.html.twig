@@ -3,7 +3,29 @@
 {% block title %}Hello HomeController!{% endblock %}
 
 {% block body %}
-  <div class="alert alert-info">
-  	Hello 
+   {% for label, messages in app.flashes %}
+    <div class="container">
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                <p>{{ message | raw }}</p>
+            {% endfor %}
+        </div>
+{% endfor %}
+  <div class="container">
+  	{% for course in courses %}
+    <div class="p-4" style="border: 1px solid red">
+    	 <h1> {{ course.title}} <small> {{ course.createdAt | date}} </small> </h1>
+    	 <p>
+    	 	<img src=" {{ course.picture }} " width="450px" height="350px" style="
+    	 	text-align:center;margin-left: 300px">
+    	 </p>
+    	 <p>
+    	 	{{ course.content }}
+    	 </p>
+    	 <h4>
+    	 	Crée par {{ course.prof.name }}
+    	 </h4>
+    </div>
+  	{% endfor %}
   </div>
 {% endblock %}

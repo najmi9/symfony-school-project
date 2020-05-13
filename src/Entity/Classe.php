@@ -23,20 +23,21 @@ class Classe
      * @ORM\Column(type="string", length=255)
      */
     private $name;
-    /**
-     * @ORM\ManyToMany(targetEntity=Prof::class, mappedBy="classes")
-     */
-    private $profs;
 
     /**
      * @ORM\ManyToMany(targetEntity=Student::class, inversedBy="classes")
      */
     private $students;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Prof::class, mappedBy="classes")
+     */
+    private $profs;
+
     public function __construct()
     {
-        $this->profs = new ArrayCollection();
         $this->students = new ArrayCollection();
+        $this->profs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -52,6 +53,31 @@ class Classe
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+    /**
+     * @return Collection|Student[]
+     */
+    public function getStudents(): Collection
+    {
+        return $this->students;
+    }
+
+    public function addStudent(Student $student): self
+    {
+        if (!$this->students->contains($student)) {
+            $this->students[] = $student;
+        }
+
+        return $this;
+    }
+
+    public function removeStudent(Student $student): self
+    {
+        if ($this->students->contains($student)) {
+            $this->students->removeElement($student);
+        }
 
         return $this;
     }
@@ -84,29 +110,5 @@ class Classe
         return $this;
     }
 
-    /**
-     * @return Collection|Student[]
-     */
-    public function getStudents(): Collection
-    {
-        return $this->students;
-    }
 
-    public function addStudent(Student $student): self
-    {
-        if (!$this->students->contains($student)) {
-            $this->students[] = $student;
-        }
-
-        return $this;
-    }
-
-    public function removeStudent(Student $student): self
-    {
-        if ($this->students->contains($student)) {
-            $this->students->removeElement($student);
-        }
-
-        return $this;
-    }
 }

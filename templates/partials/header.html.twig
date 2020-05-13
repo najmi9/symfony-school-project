@@ -6,44 +6,53 @@
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Features</a>
+        <a class="nav-link" href="/"><i class="fas fa-home"></i>Home <span class="sr-only">(current)</span></a>
       </li>
 
       {% if is_granted("ROLE_PROF") %}
          <li class="nav-item">
-           <a class="nav-link" href="{{ path('prof_add_course') }}">Cours<i class="fas fa-plus"></i></a>
+           <a class="nav-link" href="{{ path('prof_add_course') }}"><i class="fas fa-plus"></i>Cours</a>
         </li>
+         <li class="nav-item">
+           <a class="nav-link" href="{{ path('prof_add_anounce') }}"><i class="fas fa-bullhorn"></i>Anounce</a>
+        </li>
+         </li>
+         <li class="nav-item">
+           <a class="nav-link" href="{{ path('prof_add_note') }}"><i class="fas fa-plus"></i>Notes</a>
+        </li>
+      
      {% endif %}
      
-   </ul>  
+     </ul>  
 
- {% if app.user %}
+      {% if app.user %}
 
-   <ul class="navbar-nav ml-auto">
+     <ul class="navbar-nav ml-auto">
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle  align-top" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
          <img src="{{ app.user.picture }}"  class="avatar avatar-mini" 
-         alt="{{ app.user.name }}" title="{{ app.user.name }}" style="border-radius:100px">
+         alt="{{ app.user.name }}" title="{{ app.user.name }}" style="border-radius:100px" width="90px" height="90px">
         </a>
     
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
          {% if  app.user.student is defined %}
 
-             <a class="dropdown-item" href="{{ path('profile', {'id':
+             <a class="dropdown-item" href="{{ path('student_profile', {'id':
            app.user.student.id }) }}">Mon compte</a>
-
-          <a class="dropdown-item" href="{{ path('setings' )}}">Settings</a>
+          <a class="dropdown-item" href="{{ path('student_note', {'id': app.user.student.id} )}}">Mes Notes</a>
+           <a class="dropdown-item" href="{{ path('student_courses_anounces', {'id': app.user.student.id} )}}">Mes Coures et Annonces </a>
           <a class="dropdown-item" href="{{ path('app_user_logout') }}">Déconnexion</a>
 
          {% elseif app.user.id %}
-         <a class="dropdown-item" href="{{  path('prof_profile',{'id': app.user.id}) }}">Mon compte</a>
+           {% if is_granted("ROLE_PROF") %}
+           <a class="dropdown-item" href="{{  path('prof_profile',{'id': app.user.id}) }}">Mon compte</a>
 
-          <a class="dropdown-item" href="{{ path('prof')}}">Settings</a>
-          <a class="dropdown-item" href="{{ path('app_prof_logout') }}">Déconnexion</a>
-
+           <a class="dropdown-item" href="{{ path('prof_synthese', {'id':app.user.id })}}">Etudiants</a>
+           <a class="dropdown-item" href="{{ path('prof_add_course')}}">Ajouter un cours</a>
+           <a class="dropdown-item" href="{{ path('prof_add_anounce')}}">Ajouter une annonce</a>
+           <a class="dropdown-item" href="{{ path('app_prof_logout') }}">Déconnexion</a>
+         
+          {% endif %} 
           {% endif %} 
          
         </div>
@@ -59,8 +68,6 @@
      <a href="{{ path('inscription') }}" class="nav-link btn btn-success">Inscription</a>
    </li>
  </ul>
-
-
 {% endif %}
   </div>
 

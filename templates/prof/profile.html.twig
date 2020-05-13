@@ -2,12 +2,54 @@
 
 {% block body %}
   <div class="container">
-	{% for classe in classes %}
+    <h1> Mes Classes : </h1>
+  	<table class="table">
+  		<thead>
+  			<th>Nom de la classe : </th>
+  			<th> Nombre d'étudiants : </th>
+  		</thead>
+  		<tbody style="border: 2px solid green;">
+  			
+  				<tr>
+  			        <td> {% for classe in prof.classes %}
+                {{ classe.name }}
+                {% endfor %} </td>
+  			        <td>{{ prof.students | length }}</td>
+  		        </tr>
+  		
+  		</tbody>
+  	</table>	
+    <h1> Mes Courses : </h1>
+    
+        {% for course in prof.courses %}
+        <div class="p-4" style="border: 2px solid green;">
+          <a href="{{ path('prof_edit_course' , {'id': course.id})}}"
+          class="btn btn-xl btn-warning" 
+                > <i class="fas fa-edit"></i></a>
+                <a href="{{ path('prof_remove_course' , {'id': course.id})}}"
+          class="btn btn-xl btn-danger" 
+                > <i class="fas fa-trash"></i></a>
+                <h1> {{ course.title }}</h1>
+             <small>   {{ course.createdAt | date }}</small>
+               <img src=" {{ course.picture }}" width="250px", height="320px">
+                <div>{{ course.content }}</div>
 
-   <h1> le nom de la classe : {{ classe.name }}</h1>
+         </div> 
+        {% endfor %}
+    <h1> Mes Annonces :</h1>
 
- <h1> le nombre d'étudiants : {{ classe.stds_nub }}</h1>
-
-	{% endfor %}
+        {% for anounce in prof.anounces %}
+        <div class="p-4" style="border: 2px solid yellow;">
+                <h1> {{ anounce.title }}</h1>
+             <small>   {{ anounce.createdAt | date }}</small>
+                <div>{{ anounce.content }}</div>
+                <a href="{{ path('prof_edit_anounce' , {'id': anounce.id})}}"
+          class="btn btn-xl btn-warning" 
+                > <i class="fas fa-edit"></i></a>
+                 <a href="{{ path('prof_remove_anounce' , {'id': anounce.id})}}"
+          class="btn btn-xl btn-danger" 
+                > <i class="fas fa-trash"></i></a>
+         </div> 
+        {% endfor %}
 </div>
 {% endblock %}

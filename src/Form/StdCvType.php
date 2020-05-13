@@ -13,10 +13,10 @@ class StdCvType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('level')
+            ->add('city')
             ->add('school')
             ->add('year')
-            ->add('diplomes')
+            ->add('moyen')
             ->add('submit', SubmitType::class)
         ;
     }

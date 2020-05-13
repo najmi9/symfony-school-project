@@ -3,6 +3,16 @@
 {% block title %}les proffesseurs{% endblock %}
 
 {% block body %}
+ 
+ {% for label, messages in app.flashes %}
+    <div class="container">
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                <p>{{ message | raw }}</p>
+            {% endfor %}
+        </div>
+{% endfor %}
+
 <div class="container">
 
    <h1 class="alert-heading">Les proffesseurs de l'école :</h1>
@@ -36,8 +46,9 @@
 
     			</td>
     			<td>
-    				<a href="" class="btn btn-warning"><i class="fas fa-edit"></i></a>
-    				<a href="" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+    				<a href="{{ path('admin_edit_prof', {'id': prof.id}) }}" class="btn btn-warning"><i class="fas fa-edit"></i></a>
+    				<a href="{{ path('admin_remove_prof', {'id': prof.id}) }}" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                    <a href="{{ path('prof_profile', {'id': prof.id}) }}" class="btn btn-primary"><i class="fas fa-eye"></i></a>
     				
     			</td>
     			</tr>	

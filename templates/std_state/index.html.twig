@@ -3,61 +3,94 @@
 {% block title %}Résume{% endblock %}
 
 {% block body %}
-{% for message in app.flashes('message') %}
-  <div class="alert alert-info">  {{ message }} </div>
+ {% for label, messages in app.flashes %}
+    <div class="container">
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                <p>{{ message | raw }}</p>
+            {% endfor %}
+        </div>
 {% endfor %}
+
   <div class="container">
     <div class="container alert alert-success">
-    	<h1 class="alert-heading">Information Personnelles : </h1>
-      <a href="{{ path('inscription_edit', {'id': stdInfo.id}) }}"
+    	<h1 class="alert-heading">Information de Connexion : </h1>
+      <a href="{{ path('inscription_edit', {'id': user.id}) }}"
        class="btn btn-small btn-warning  ml-auto" 
         ><i class="fas fa-edit"></i></a>
     	<table class="table">
     		<thead>
-    			<th> ID </th>
+    			<th> Photo Perssonnelle</th>
+          <th> ID </th>
     			<th> Nom complète </th>
-    			<th> Sex </th>
+    			
     			<th> Email </th>
-    			<th> C.I.N </th>
-    			<th> C.N.E </th>
-    			<th> Date de Naissance</th>
-    			<th>Ville</th>
+    
     		</thead>
     		<tbody>
-    			<td> {{ stdInfo.id }} </td>
-    			<td> {{ stdInfo.name }} </td>
-    			 <td>{{ stdInfo.gendre}}</td>
-    			<td> {{ stdInfo.email }} </td>
-    			<td> {{ stdInfo.cin }} </td>
-    			<td> {{ stdInfo.cne }} </td>
-    			<td> {{ stdInfo.age | date('m/d/Y') }} </td>
-    			<td>{{ stdInfo.city }} <small> {{ stdInfo.adress }} </small> </td>
-
+           <td><img src='{{ user.picture}}' width="100px" height="100px" /></td>
+    			<td> {{ user.id }} </td>
+    			<td> {{ user.name }} </td>
+    			
+    			<td> {{ user.email }} </td>
     		</tbody>
     	</table>
     </div>
-     <div class="container alert alert-info">
+ 
+    <div class="container alert alert-primary">
+      <h1 class="alert-heading"> Information Perssonnelles : </h1>
+           {% if not  stdInfo.id is defined %}
+       <a href="{{ path('student_add_info')}}" class="btn btn-primary">        
+         <i class="fas fa-plus"></i>
+       </a>
+     {% endif %}
+       {% if stdInfo.id is defined %}
+        <a href="{{ path('student_edit_info',{'id':stdInfo.id})}}" class="btn btn-warning">        
+         <i class="fas fa-edit"></i>
+       </a>
+        <table class="table">
+        <thead>
+          <th> Date de Naissance : </th>
+          <th> C.I.N :  </th>
+          <th> Sexe :  </th>         
+          <th> Ville :  </th>   
+          <th> Tél :  </th> 
+        </thead>
+        <tbody>
+           <td> {{ stdInfo.age | date('m/d/Y')}} </td>
+          <td> {{ stdInfo.cin }} </td>
+          <td> {{ stdInfo.gendre }} </td>         
+          <td> {{ stdInfo.city }} </td>
+          <td> {{ stdInfo.phone }}</td>
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+     <div class="container alert alert-secondary">
 
-    	<h1 class="alert-heading">Cursur Accadémique :  </h1>
-        <a href="{{ path('cv_student', {'id': stdInfo.id}) }}"
+    	<h1 class="alert-heading">Année de Premier Bac :  </h1>
+      {% if stdInfo %}
+     <a href="{{ path('cv_student', {'id': stdInfo.id}) }}"
        class="btn btn-small btn-warning  ml-auto" 
         ><i class="fas fa-edit"></i></a>
+    {% endif %}
+        
     	<table class="table">
     		<thead>
-    			<th> ID </th>
-    			<th> Niveau Scolaire </th>
-    			<th> Lycée </th>
-    			<th> Date Scolaire </th>
-    			<th> Les Diplômes Obtenus </th>
+    			<th> ID de dossier :  </th>
+    			<th> Ville d'étude :  </th>
+    			<th> Lycée d'étude : </th>
+    			<th> Année : </th>
+    			<th> Moyenne Générale :  </th>
     		</thead>
 
         {% if stdCv.id is defined %}
             	<tbody>
     			        <td> {{ stdCv.id }} </td>
-    			        <td> {{ stdCv.level }} </td>
+    			        <td> {{ stdCv.city }} </td>
     			        <td> {{ stdCv.school }} </td>
     			        <td> {{ stdCv.year | date('m/d/Y')}} </td>
-    			        <td> {{ stdCv.diplomes }} </td>
+    			        <td> {{ stdCv.moyen }} </td>
     		      </tbody>
        {% endif %}
 
@@ -72,9 +105,11 @@
          {% else %}
             <h3 class="alert-heading"> NOT DEFINED </h3>            
          {% endif %}
-           <a href="{{ path('choice_student', {'id': stdInfo.id}) }}"
+         {% if user %}
+           <a href="{{ path('choice_student', {'id': user.id}) }}"
        class="btn btn-small btn-warning  ml-auto" 
         ><i class="fas fa-edit"></i></a>
+      {% endif %}
     </div>
 
    <div class="block">

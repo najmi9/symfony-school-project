@@ -1,8 +1,10 @@
 security:
 
-  
+    role_hierarchy:
+        ROLE_PROF: ROLE_USER
+        ROLE_ADMIN: ROLE_PROF
     encoders:
-       App\Entity\StdPerInfo:
+       App\Entity\User:
           algorithm: auto
 
        App\Entity\Prof:
@@ -14,7 +16,7 @@ security:
             property: email
         app_user_provider:
           entity: 
-            class:  App\Entity\StdPerInfo
+            class:  App\Entity\User
             property: email
 
            # used to reload user from session & other features (e.g. switch_user)

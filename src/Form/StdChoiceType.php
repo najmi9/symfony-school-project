@@ -16,7 +16,6 @@ class StdChoiceType extends AbstractType
         $builder
             ->add('bactype',ChoiceType::class , [
     'choices'  => [
-        'SVT' => 'SVT',
         'PHYS' => 'PHYS',
         'MATH' => 'MATH',
     ],
