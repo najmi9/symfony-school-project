@@ -48,6 +48,16 @@ class User implements UserInterface
      */
     private $student;
 
+    /**
+     * @ORM\Column(type="string", length=55, nullable=true)
+     */
+    private $activationToken;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $resetToken;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -161,6 +171,30 @@ class User implements UserInterface
          if ($student->getUser() !== $this) {
              $student->setUser($this);
          }
+
+         return $this;
+     }
+
+     public function getActivationToken(): ?string
+     {
+         return $this->activationToken;
+     }
+
+     public function setActivationToken(?string $activationToken): self
+     {
+         $this->activationToken = $activationToken;
+
+         return $this;
+     }
+
+     public function getResetToken(): ?string
+     {
+         return $this->resetToken;
+     }
+
+     public function setResetToken(?string $resetToken): self
+     {
+         $this->resetToken = $resetToken;
 
          return $this;
      }

@@ -15,6 +15,7 @@ use App\Form\AnounceType;
 use App\Form\NoteType;
 use App\Entity\Course;
 use App\Form\CourseType;
+use Symfony\Component\Security\Core\Security;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ProfController extends AbstractController

@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Prof;
 use App\Entity\Student;
 use App\Entity\Classe;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * @IsGranted("ROLE_ADMIN")
@@ -26,12 +27,16 @@ class AdminController extends AbstractController
     /**
      * @Route("/admin/students", name="admin_students")
      */
-    public function index(StudentRepository $stdRepo)
+    public function index(Request $request,StudentRepository $stdRepo,  PaginatorInterface $paginator)
     {
-       //dd($stdRepo->findAll());
+       $students = $paginator->paginate(
+    $stdRepo->findAll(), // Requête contenant les données à paginer (ici nos articles)
+    $request->query->getInt('page', 1), // Numéro de la page en cours, passé dans l'URL, 1 si aucune page
+    4 // Nombre de résultats par page
+);
       
         return $this->render('admin/students.html.twig', [
-           'students'=>$stdRepo->findAll()
+           'students'=>$students
         ]);
     }
     
@@ -142,10 +147,13 @@ class AdminController extends AbstractController
       * @Route("/admin/profs", name="admin_profs")
       */
      
-     public function profs(ProfRepository $profRepo){
-        
+     public function profs(Request $request,ProfRepository $profRepo, PaginatorInterface $paginator){
+        $profs = $paginator->paginate(
+          $profRepo->findAll(),
+          $request->query->getInt('page', 1),
+          4);
        return $this->render('admin/profs.html.twig', [
-           'profs'=>$profRepo->findAll()
+           'profs'=>$profs
        ]);
      }
 
@@ -153,10 +161,14 @@ class AdminController extends AbstractController
       * @Route("/admin/classes", name="admin_classes")
       */
      
-     public function classes(ClasseRepository $classeRepo ){
+     public function classes(Request $request, ClasseRepository $classeRepo, PaginatorInterface $paginator ){
+         $classes = $paginator->paginate(
+          $classeRepo->findAll() ,
+          $request->query->getInt('page', 1),
+          4);
         
        return $this->render('admin/classes.html.twig', [
-          'classes'=>$classeRepo->findAll() 
+          'classes'=>$classes
        ]);
      }
      

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -31,38 +32,55 @@ class InscriptionController extends AbstractController
      * @Route("/student/inscription", name="inscription")
      */
     public function index(Request $request, EntityManagerInterface $manager
-    , UserPasswordEncoderInterface $passwordEncoder)
+    , UserPasswordEncoderInterface $passwordEncoder, \Swift_Mailer $mailer,
+    TokenGeneratorInterface $tokenGenerator)
     {
        
               $user = new User();
               $finStd = new Student();
               //Default state for the student, edited by th eadmin  
               $stdProfile = new StdProfile();
-                $stdProfile->setState('NOT VERIFIED')
+              $stdProfile->setState('NOT VERIFIED')
                            ->setNote(0);
               $form = $this->createForm(UserType::class, $user);
               $form->handleRequest($request);
                
               if ($form->isSubmitted() && $form->isValid()) {
+                   $token =$tokenGenerator->generateToken();
+                   $data = $request->request->get('user');
                    $user->setPassword(
-                       $passwordEncoder->encodePassword(
+                           $passwordEncoder->encodePassword(
                            $user,
-                           $form->get('password')->getData()
-                       )
-                   );       
-                  $finStd->setUser($user);
-                  $finStd->setProfile($stdProfile);
-                   $manager->persist($user);
+                           $form->get('password')->getData()))
+                        ->setActivationToken($token)
+                   ;     
+                   $finStd->setUser($user);
+                   $finStd->setProfile($stdProfile);
+                   $message =( new \Swift_Message("Confirmation de l'émail"))
+                    ->setFrom('noreplynajmi@gmail.com')
+                    ->setTo($data['email'])
+                    ->setBody(
+                            $this->renderView(                   
+                            'std_state/email.html.twig',
+                            [
+                              'user' => $request->request->get('user'),
+                              'token'=>$token
+                            ]
+                            )
+                     , 'text/html');
+                  $mailer->send($message);
+                 
+                  $manager->persist($user);
                   $manager->persist($finStd);
-                     $manager->persist($stdProfile);
-                   $manager->flush();
+                  $manager->persist($stdProfile);
+                  $manager->flush();
                    
-                   $this->addFlash('success', 'Ok, You are added successfly, Please Verify your email to continue !');
-                   return $this->redirectToRoute('home');
+                  $this->addFlash('success', 'Ok, You are added successfly, Please Verify your email to continue !');
+                  return $this->redirectToRoute('home');
               }
-        return $this->render('inscription/index.html.twig', [
-           'stdForm'=>$form->createView()
-        ]);
+            return $this->render('inscription/index.html.twig', [
+             'stdForm'=>$form->createView()
+            ]);
     }
 
     /**
@@ -74,27 +92,28 @@ class InscriptionController extends AbstractController
     {
           
         if ($stdInfo) {
-          $finStd =  $stdRepo->findOneByStdperinfo($stdInfo);
-           $form = $this->createForm(StdPerInfoType::class, $stdInfo);
+              $finStd =  $stdRepo->findOneByStdperinfo($stdInfo);
+              $form = $this->createForm(StdPerInfoType::class, $stdInfo);
               $form->handleRequest($request);
        
               if ($form->isSubmitted() && $form->isValid()) {
-                  $finStd->setStdperinfo($stdInfo);
+                   $finStd->setStdperinfo($stdInfo);
                    $manager->persist($stdInfo);
-                  $manager->persist($finStd);
+                   $manager->persist($finStd);
                    $manager->flush();
                    
                    $this->addFlash('message', 'Ok, Your Information edited successfly');
                    return $this->redirectToRoute('student_profile',['id'=>$finStd->getId()]);
               }
         } else {
-          $stdInfo = new StdPerInfo();
-          $finStd = $stdRepo->findOneByUser($this->getUser());
-           $form = $this->createForm(StdPerInfoType::class, $stdInfo);
-              $form->handleRequest($request);
+            $stdInfo = new StdPerInfo();
+            $finStd = $stdRepo->findOneByUser($this->getUser());
+            $form = $this->createForm(StdPerInfoType::class, $stdInfo);
+            $form->handleRequest($request);
        
-              if ($form->isSubmitted() && $form->isValid()) {
-                 $data = $request->request->get('std_per_info');
+            if ($form->isSubmitted() && $form->isValid()) {
+              dd($form->get('age')->getData());
+            $data = $request->request->get('std_per_info');
          // dd($data, $request->request);
   $date = $data['age']['day'].'-'.$data['age']['month'].'-'.$data['age']['year'];
                
@@ -105,12 +124,12 @@ class InscriptionController extends AbstractController
                          ->setPhone($data['phone'])
                   ;
                   $finStd->setStdperinfo($stdInfo);
-                   $manager->persist($stdInfo);
+                  $manager->persist($stdInfo);
                   $manager->persist($finStd);
-                   $manager->flush();
+                  $manager->flush();
                    
-                   $this->addFlash('message', 'Ok, Your Information added successfly');
-                   return $this->redirectToRoute('student_profile',['id'=>$finStd->getId()]);
+                  $this->addFlash('message', 'Ok, Your Information added successfly');
+                  return $this->redirectToRoute('student_profile',['id'=>$finStd->getId()]);
               }
         }
         
@@ -125,41 +144,68 @@ class InscriptionController extends AbstractController
      */
     public function editInscription(User $user, Request $request, 
       EntityManagerInterface $manager, StudentRepository $finstdRepo
-    , UserPasswordEncoderInterface $passwordEncoder,UserRepository $stdRepo)
+      , UserPasswordEncoderInterface $passwordEncoder,
+    UserRepository $stdRepo, \Swift_Mailer $mailer, TokenGeneratorInterface$tokenGenerator)
     {
-       
-            
-             $finStd =  $finstdRepo->findOneByUser($user);
+
+              $oldEmail = $user->getEmail();
+              $finStd =  $finstdRepo->findOneByUser($user);
        
               $form = $this->createForm(UserType::class, $user);
               $form->handleRequest($request);
        
               if ($form->isSubmitted() && $form->isValid()) {
-                  
-
-                //la modification des informations et de Vérification de l'email
-
-                 // encode the plain password
+                   $data = $request->request->get('user');
+                   //Vérifier s'il y a un changement de l'email
+                   if ($data['email'] != $oldEmail) {
+                      $token =$tokenGenerator->generateToken();
+                      $user->setEmail($data['email'])
+                           ->setActivationToken($token)
+                           ->setPassword(
+                             $passwordEncoder->encodePassword(
+                             $user,
+                             $form->get('password')->getData()))
+                           ->setName($data['name'])
+                           ->setPicture($data['picture'])
+                      ;
+                      $message =( new \Swift_Message("Confirmation de l'email"))
+                       ->setFrom('noreplynajmi@gmail.com')
+                       ->setTo($data['email'])
+                       ->setBody(
+                            $this->renderView(                   
+                            'std_state/email.html.twig',
+                            [
+                              'user' => $request->request->get('user'),
+                              'token'=>$token
+                            ]
+                            )
+                       , 'text/html');
+                      $mailer->send($message);
+                      $manager->persist($user);
+                      $manager->flush();
+                      /*$stdsec->logout();
+                      $this->addFlash('success', 'Ok, Your Information edited successfly, Please Verify your email to continue !');*/
+                      return $this->redirectToRoute('app_user_logout');
+                   }
                    $user->setPassword(
-                       $passwordEncoder->encodePassword(
+                           $passwordEncoder->encodePassword(
                            $user,
-                           $form->get('password')->getData()
-                       )
-                   );
-                  $finStd->setUser($user);
-                   $manager->persist($user);
+                           $form->get('password')->getData()))
+                        ->setName($data['name'])
+                        ->setPicture($data['picture'])
+                   ;
+                   $finStd->setUser($user);
+                  $manager->persist($user);
                   $manager->persist($finStd);
-                   $manager->flush();
+                  $manager->flush();
                    
-                   $this->addFlash('message', 'Ok, Your Information edited successfly, Please Verify your email to continue !');
-                   return $this->redirectToRoute('student_profile', ['id'=> $finStd->getId()]);
+                  $this->addFlash('success', 'Ok, Your Information edited successfly !');
+                  return $this->redirectToRoute('student_profile', ['id'=>$finStd->getId()]);     
               }
         return $this->render('inscription/index.html.twig', [
            'stdForm'=>$form->createView()
         ]);
     }
-
-     
     /**
      * @IsGranted("ROLE_USER")
      * @Route("student/cursur-accademique/{id}", name="cv_student")

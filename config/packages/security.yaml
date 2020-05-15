@@ -39,12 +39,11 @@ security:
             anonymous: true
             provider:
                 app_user_provider
-            form_login:
-                login_path: app_user_login
-                check_path: app_user_login
-            logout: 
+            guard:
+                authenticators:
+                    - App\Security\LoginFormUserAuthenticator
+            logout:
                 path: app_user_logout
-                target: home
                 
         main:
             pattern: ^/admin

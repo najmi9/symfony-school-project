@@ -80,6 +80,11 @@ class Prof implements UserInterface
      * @ORM\ManyToMany(targetEntity=Classe::class, inversedBy="profs")
      */
     private $classes;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $resetToken;
     
 
     public function __construct()
@@ -339,6 +344,18 @@ class Prof implements UserInterface
          if ($this->classes->contains($class)) {
              $this->classes->removeElement($class);
          }
+
+         return $this;
+     }
+
+     public function getResetToken(): ?string
+     {
+         return $this->resetToken;
+     }
+
+     public function setResetToken(?string $resetToken): self
+     {
+         $this->resetToken = $resetToken;
 
          return $this;
      }

@@ -17,10 +17,10 @@ chaque prof ------> stds, chaque std------> note // prof à faire . --> editer u
  /***
  /**1----Voters.
     2-pagination
-    3-- vérification de l'email
-    4-- reset mot de passe
     5 -- payenement des users
     6--layout et responsive
     7-stistics
     8- gérer les erreurs avec les formulaires
+    9- gestion des images 
+    10-systeme de filtrage
     

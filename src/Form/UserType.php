@@ -29,7 +29,7 @@ class UserType extends AbstractType
     'first_options'  => ['label' => 'Password'],
     'second_options' => ['label' => 'Repeat Password'],
 ])
-            ->add('captcha', CaptchaType::class)
+            //->add('captcha', CaptchaType::class)
             
             ->add('submit', SubmitType::class)
         ;
