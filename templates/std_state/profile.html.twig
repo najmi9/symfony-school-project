@@ -13,36 +13,29 @@
         </div>
 {% endfor %}
 <div class="container">
+  {% for prof in myclasse.profs %}
 
-  {% for prof in profs %}
-  	{% for course in prof.courses %}
-  		<section>
-  <h2> Cours {{ course.id }} de Matière : {{prof.matter}}</h2>
-      <div class="container">
-      	<h1> {{ course.title }} </h1> <h4>crée par : {{ prof.name }} </h4> à : <small>  {{ course.createdAt | date }} </small>
-      	<div>
-      		<img src="{{ course.picture }}">
-      	</div>
-      	<div>
-      		<p> {{ course.content }} </p>
-      	</div>
+      {% for course in prof.courses %}
+      	<div class="text-light bg-warning">
+      <h1> {{ course.title }} par {{ prof.name }} à {{ course.createdAt | date}}</h1>
+      <img src="{{ course.picture }}">
+      <div>
+      	{{ course.content}}
       </div>
-      </section>
-  	{% endfor %}
+ </div>
+      {% endfor %}
 
-  	{% for anounce in prof.anounces %}
-  		<section> 
-  			<h2> Anounce  {{anounce.id}} de Matière : {{ prof.matter }} </h2>
-      <div class="container">
-      	<h1> {{ anounce.title }} </h1> <h4>crée par : {{ prof.name }} </h4> à : <small>  {{ anounce.createdAt | date }} </small>
-      
-      	<div>
-      		<p> {{ anounce.content }} </p>
-      	</div>
+        {% for anounce in prof.anounces %}
+      	<div class="text-light bg-warning">
+      <h1> {{ anounce.title }} par {{ prof.name }} à {{ anounce.createdAt |date }} </h1>
+     
+      <div>
+      	{{ anounce.content}}
       </div>
-      </section>
-  	{% endfor %}
-  
+ </div>
+      {% endfor %}
+     
   {% endfor %}
+  
 </div>
 {% endblock %}

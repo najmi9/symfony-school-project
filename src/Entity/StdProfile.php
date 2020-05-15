@@ -26,14 +26,9 @@ class StdProfile
     private $state;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $number;
-
-    /**
      * @ORM\Column(type="integer")
      */
-    private $notes;
+    private $note;
 
     /**
      * @ORM\OneToOne(targetEntity=Student::class, mappedBy="profile", cascade={"persist", "remove"})
@@ -57,26 +52,14 @@ class StdProfile
         return $this;
     }
 
-    public function getNumber(): ?string
+    public function getNote(): ?int
     {
-        return $this->number;
+        return $this->note;
     }
 
-    public function setNumber(string $number): self
+    public function setNote(int $note): self
     {
-        $this->number = $number;
-
-        return $this;
-    }
-
-    public function getNotes(): ?int
-    {
-        return $this->notes;
-    }
-
-    public function setNotes(int $notes): self
-    {
-        $this->notes = $notes;
+        $this->note = $note;
 
         return $this;
     }
@@ -98,6 +81,7 @@ class StdProfile
         return $this;
     }
 
+   
    
 
     

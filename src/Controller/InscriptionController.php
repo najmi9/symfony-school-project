@@ -39,8 +39,7 @@ class InscriptionController extends AbstractController
               //Default state for the student, edited by th eadmin  
               $stdProfile = new StdProfile();
                 $stdProfile->setState('NOT VERIFIED')
-                           ->setNumber('TODO')
-                           ->setNotes(0);
+                           ->setNote(0);
               $form = $this->createForm(UserType::class, $user);
               $form->handleRequest($request);
                

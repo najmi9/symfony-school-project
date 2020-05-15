@@ -5,28 +5,26 @@
 
  
       <h1>
-      	Les étudiants 
+        Les étudiants 
       </h1>
       <table class="table">
-      	<thead>
-      	<th></th>
-      	<th> Name</th>
-      	<th>Email</th>
-      	<th>Etat</th>
-      	<th> Bac Suité </th>
-      	<th> Moyen de 1ère Bac : </th>
-      	<th>notes</th>
-
-      	
-      	<th></th>
-      	</thead>
-      	<tbody>
+        <thead>
+        <th></th>
+        <th> Name</th>
+        <th>Email</th>
+        <th>Etat</th>
+        <th> Bac Suité </th>
+        <th> Moyen de 1ère Bac : </th>
+        <th>note</th>       
+        <th></th>
+        </thead>
+        <tbody>
 
       {% for item in students %}
 
-      	<tr>
-      	
-      		
+        <tr>
+        
+          
            <td> <img src="{{ item.user.picture }}" width="80px" height="80px" /></td>
            <td> {{ item.user.name}} </td>
            <td>{{ item.user.email }}</td>
@@ -43,14 +41,30 @@
               </span>
             {% else %}
                <span style="background-color: orange;
-   font-weight: bold; padding: 3px;
+                      font-weight: bold; padding: 3px;
                "> {{ item.profile.state }}</span>
             {% endif %}
 
           </td>
-           <td>  {{ item.stdchoice.bactype }} </td>
-           <td>  {{ item.stdcv.moyen}}  </td>
-           <td>  {{ item.profile.notes}} </td>
+           
+
+           <td>  
+                  {% if   item.stdchoice %}
+                     {{ item.stdchoice.bactype }}
+                  {% else %}
+                     NOT DEFINED
+                  {% endif %} 
+           </td>
+
+           <td>   
+                  {% if   item.stdcv %} 
+                    {{ item.stdcv.moyen}}
+                  {% else %} 
+                     NOT DEFINED
+                  {% endif %}  
+            </td>
+
+           <td>  {{ item.profile.note }} </td>
 
            <td>
             <a href=" {{ path('admin_delete_student', { 'id': item.id }) }} " 

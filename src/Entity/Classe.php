@@ -25,19 +25,22 @@ class Classe
     private $name;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Student::class, inversedBy="classes")
-     */
-    private $students;
-
-    /**
      * @ORM\ManyToMany(targetEntity=Prof::class, mappedBy="classes")
      */
     private $profs;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Student::class, mappedBy="classe")
+     */
+    private $students;
+
+
     public function __construct()
     {
-        $this->students = new ArrayCollection();
         $this->profs = new ArrayCollection();
+        $this->stdProfiles = new ArrayCollection();
+        $this->students = new ArrayCollection();
+        
     }
 
     public function getId(): ?int
@@ -56,32 +59,6 @@ class Classe
 
         return $this;
     }
-    /**
-     * @return Collection|Student[]
-     */
-    public function getStudents(): Collection
-    {
-        return $this->students;
-    }
-
-    public function addStudent(Student $student): self
-    {
-        if (!$this->students->contains($student)) {
-            $this->students[] = $student;
-        }
-
-        return $this;
-    }
-
-    public function removeStudent(Student $student): self
-    {
-        if ($this->students->contains($student)) {
-            $this->students->removeElement($student);
-        }
-
-        return $this;
-    }
-
     /**
      * @return Collection|Prof[]
      */
@@ -109,6 +86,38 @@ class Classe
 
         return $this;
     }
+    /**
+     * @return Collection|Student[]
+     */
+    public function getStudents(): Collection
+    {
+        return $this->students;
+    }
+
+    public function addStudent(Student $student): self
+    {
+        if (!$this->students->contains($student)) {
+            $this->students[] = $student;
+            $student->setClasse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeStudent(Student $student): self
+    {
+        if ($this->students->contains($student)) {
+            $this->students->removeElement($student);
+            // set the owning side to null (unless already changed)
+            if ($student->getClasse() === $this) {
+                $student->setClasse(null);
+            }
+        }
+
+        return $this;
+    }
+
+  
 
 
 }

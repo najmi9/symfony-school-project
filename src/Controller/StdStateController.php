@@ -21,7 +21,7 @@ class StdStateController extends AbstractController
        
        
       return $this->render('std_state/profile.html.twig',[
-     'profs'=>$std->getProfs()
+     'myclasse'=>$std->getClasse()
       ]);
    }
 
@@ -46,19 +46,29 @@ class StdStateController extends AbstractController
     * @Route("/student/notes/{id}", name="student_note")
     */
  public function notes(Student $student, NoteRepository $noteRepo)
- {
-       $notes = $noteRepo->findByStudent($student);
-       $moyen = 0;
-       $count = 0;
+ {     
+         $notes = [];
+         $moyen = 0; 
+      if ($student->getProfile()->getState() == "ACCEPTED" ) {
+       foreach ($student->getClasse()->getProfs() as $prof) {
+         $note = $noteRepo->findOneByProf($prof);
+         $notes[] = [
+          'note'=>(int)$note->getNote(),
+           'matter'=>$note->getProf()->getMatter()
+           ];
+        }
+      
+        if (! count($notes) == 0) {
+            
        foreach ($notes as $note) {
-        $count ++;
-         $moyen = $moyen + $note->getNote();
+         $moyen = $moyen +$note['note'];
        }
-       if($count == 0){
-        $moyen = 0;
-       }else{
-          $moyen = $moyen/$count;
-       }
+       $moyen = $moyen/count($notes);
+        } 
+       
+      }
+         
+         
     
        return $this->render("std_state/notes.html.twig",[
         'notes'=>$notes,

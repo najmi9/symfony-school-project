@@ -11,21 +11,30 @@
             {% endfor %}
         </div>
 {% endfor %}
+
+ {% include 'home/slider.html.twig' %}
+
   <div class="container">
-  	{% for course in courses %}
-    <div class="p-4" style="border: 1px solid red">
-    	 <h1> {{ course.title}} <small> {{ course.createdAt | date}} </small> </h1>
-    	 <p>
-    	 	<img src=" {{ course.picture }} " width="450px" height="350px" style="
-    	 	text-align:center;margin-left: 300px">
-    	 </p>
-    	 <p>
-    	 	{{ course.content }}
-    	 </p>
-    	 <h4>
-    	 	Crée par {{ course.prof.name }}
-    	 </h4>
+    <h1>Comprendre le Monde, Construire l'avenir ! </h1>
+    <h4> Vous souhaitez avoir un Bac avec une bonne qualité d'étude et dans des meuilleurs conditions, Voilà ! </h4>
+  	<h2>Bienvenue Chez le Groupe Social privé XXXXXXXXX  </h2>
+
+    <div class="container">
+      Nous ensigne le programme du Ministère de l'éducation nationnale Marocain.
     </div>
-  	{% endfor %}
+
+<div class="container">
+  <mark>CREATIVITE</mark>
+  <mark>CURIOSITE</mark>
+  <mark>RESPECT</mark>
+  <mark>PRODUCTIVITE</mark>
+</div>
+<div>
+  
+  L'espace est bien equipé et respecte les normes de sécurité et confort des stagiaires avec des grandes salles théoriques et pratiques pour assurer les meilleures conditions du travail.
+</div>
+<h1>
+  <h3>Obtenir le  Bac, c'est la première pas pour réussir </h3>
+</h1>
   </div>
 {% endblock %}

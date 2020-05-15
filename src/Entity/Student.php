@@ -43,20 +43,6 @@ class Student
      */
     private $stdperinfo;
 
-    /**
-     * @ORM\ManyToMany(targetEntity=Classe::class, mappedBy="students")
-     */
-    private $classes;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Note::class, mappedBy="student")
-     */
-    private $notes;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Prof::class, mappedBy="students")
-     */
-    private $profs;
 
     /**
      * @ORM\OneToOne(targetEntity=User::class, inversedBy="student", cascade={"persist", "remove"})
@@ -64,11 +50,22 @@ class Student
      */
     private $user;
 
+    
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Note::class, mappedBy="students")
+     */
+    private $notes;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Classe::class, inversedBy="students")
+     */
+    private $classe;
+
+
     public function __construct()
     {
-        $this->classes = new ArrayCollection();
         $this->notes = new ArrayCollection();
-        $this->profs = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -116,30 +113,16 @@ class Student
         $this->stdperinfo = $stdperinfo;       
     }
 
-    /**
-     * @return Collection|Classe[]
-     */
-    public function getClasses(): Collection
+  
+  
+    public function getUser(): ?User
     {
-        return $this->classes;
+        return $this->user;
     }
 
-    public function addClass(Classe $class): self
+    public function setUser(User $user): self
     {
-        if (!$this->classes->contains($class)) {
-            $this->classes[] = $class;
-            $class->addStudent($this);
-        }
-
-        return $this;
-    }
-
-    public function removeClass(Classe $class): self
-    {
-        if ($this->classes->contains($class)) {
-            $this->classes->removeElement($class);
-            $class->removeStudent($this);
-        }
+        $this->user = $user;
 
         return $this;
     }
@@ -156,7 +139,7 @@ class Student
     {
         if (!$this->notes->contains($note)) {
             $this->notes[] = $note;
-            $note->setStudent($this);
+            $note->addStudent($this);
         }
 
         return $this;
@@ -166,54 +149,22 @@ class Student
     {
         if ($this->notes->contains($note)) {
             $this->notes->removeElement($note);
-            // set the owning side to null (unless already changed)
-            if ($note->getStudent() === $this) {
-                $note->setStudent(null);
-            }
+            $note->removeStudent($this);
         }
 
         return $this;
     }
 
-    /**
-     * @return Collection|Prof[]
-     */
-    public function getProfs(): Collection
+    public function getClasse(): ?Classe
     {
-        return $this->profs;
+        return $this->classe;
     }
 
-    public function addProf(Prof $prof): self
+    public function setClasse(?Classe $classe): self
     {
-        if (!$this->profs->contains($prof)) {
-            $this->profs[] = $prof;
-            $prof->addStudent($this);
-        }
+        $this->classe = $classe;
 
         return $this;
     }
-
-    public function removeProf(Prof $prof): self
-    {
-        if ($this->profs->contains($prof)) {
-            $this->profs->removeElement($prof);
-            $prof->removeStudent($this);
-        }
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
 
 }

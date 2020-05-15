@@ -23,43 +23,35 @@ use App\Entity\Classe;
  */
 class AdminController extends AbstractController
 {
-  /**
-   * @Route("/admin", name="admin_home")
-   */
-  public function home(){
-          
-      return $this->render("admin/home.html.twig");
-  }
-
     /**
      * @Route("/admin/students", name="admin_students")
      */
-    public function index(StudentRepository $stdRepo, ProfRepository $profRepo)
+    public function index(StudentRepository $stdRepo)
     {
-    	
-    	
+       //dd($stdRepo->findAll());
+      
         return $this->render('admin/students.html.twig', [
-           'students'=>$stdRepo->findAll(),
-           'profs'=>$profRepo->findAll()
+           'students'=>$stdRepo->findAll()
         ]);
     }
     
     /**
      * @Route("/admin/student/profile/edit/{id}", name="admin_edit_profile_student")
      */
-    public function editStudentProfile(Student $std, Request $request, EntityManagerInterface $manager)
+    public function editStudentProfile(Student $std, Request $request, EntityManagerInterface $manager, ClasseRepository $classeRepo)
     {
      
-                $stdProfile = $std->getProfile();
+              $stdProfile = $std->getProfile();
                 
               $form = $this->createForm(StdProfileType::class, $stdProfile);
               $form->handleRequest($request);
-       
+            
               if ($form->isSubmitted() && $form->isValid()) {
                 $data = $request->request->get('std_profile');
+                 //dd($classeRepo->findOneById((int)$data['classe']));
               $stdProfile->setState($data['state'])
-                        ->setNumber($data['number'])
-                         ->setNotes($data['notes']);
+                         ->setNote($data['note'])
+                      ;
                  
                   $std->setProfile($stdProfile);
                   $manager->persist($std);
@@ -182,15 +174,16 @@ class AdminController extends AbstractController
           $data = $request->request->get('classe_form');
          
            $classe->setName($data['name']);
-           foreach ($data['profs'] as $prof) {
-            $classe->addProf($profRepo->findOneById($prof));
-            $manager->persist($classe);
-           }
-            foreach ($data['students'] as $prof) {
-            $classe->addStudent($stdRepo->findOneById($prof));
-            $manager->persist($classe);
-
-           }
+           
+              foreach ($classe->getStudents() as $std) {
+                $std->setClasse($classe);
+               $manager->persist($std);
+              }
+                foreach ($classe->getProfs() as $prof) {
+                $prof->addClass($classe);
+               $manager->persist($prof);
+              }
+           //  dd(count($classe->getStudents()));
                  
           $manager->persist($classe);
 
@@ -202,7 +195,18 @@ class AdminController extends AbstractController
           $classe= new Classe();
           $form=$this->createForm(ClasseFormType::class, $classe);
           $form->handleRequest($request);  
-          if ($form->isSubmitted() && $form->isValid()) {  
+          if ($form->isSubmitted() && $form->isValid()) { 
+            $data = $request->request->get('classe_form');
+
+              foreach ($classe->getStudents() as $std) {
+                $std->setClasse($classe);
+               $manager->persist($std);
+              }
+               foreach ($classe->getProfs() as $prof) {
+                $prof->addClass($classe);
+               $manager->persist($prof);
+              }
+            
              $manager->persist($classe);
              $manager->flush();
              $this->addFlash('success', 'the classe has been added successfly !');

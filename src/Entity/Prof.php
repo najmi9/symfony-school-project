@@ -76,12 +76,6 @@ class Prof implements UserInterface
      * @ORM\OneToMany(targetEntity=Note::class, mappedBy="prof")
      */
     private $notes;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Student::class, inversedBy="profs")
-     */
-    private $students;
-
     /**
      * @ORM\ManyToMany(targetEntity=Classe::class, inversedBy="profs")
      */
@@ -93,7 +87,6 @@ class Prof implements UserInterface
         $this->courses = new ArrayCollection();
         $this->anounces = new ArrayCollection();
         $this->notes = new ArrayCollection();
-        $this->students = new ArrayCollection();
         $this->classes = new ArrayCollection();
     }
 
@@ -324,33 +317,6 @@ class Prof implements UserInterface
 
          return $this;
      }
-
-     /**
-      * @return Collection|Student[]
-      */
-     public function getStudents(): Collection
-     {
-         return $this->students;
-     }
-
-     public function addStudent(Student $student): self
-     {
-         if (!$this->students->contains($student)) {
-             $this->students[] = $student;
-         }
-
-         return $this;
-     }
-
-     public function removeStudent(Student $student): self
-     {
-         if ($this->students->contains($student)) {
-             $this->students->removeElement($student);
-         }
-
-         return $this;
-     }
-
      /**
       * @return Collection|Classe[]
       */

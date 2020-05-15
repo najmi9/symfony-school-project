@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'prof/base.html.twig' %}
 
 {% block body %}
   <div class="container">
@@ -6,7 +6,7 @@
   	<table class="table">
   		<thead>
   			<th>Nom de la classe : </th>
-  			<th> Nombre d'étudiants : </th>
+  			
   		</thead>
   		<tbody style="border: 2px solid green;">
   			
@@ -14,7 +14,7 @@
   			        <td> {% for classe in prof.classes %}
                 {{ classe.name }}
                 {% endfor %} </td>
-  			        <td>{{ prof.students | length }}</td>
+  			       
   		        </tr>
   		
   		</tbody>

@@ -145,60 +145,19 @@ class ProfController extends AbstractController
       return $this->redirectToRoute('prof_profile', ['id'=>$this->getUser()->getId()]);
     }
 
-      /**
-       * @Route("/prof/note/add", name="prof_add_note")
-       * @Route("/prof/note/edit/{id}", name="prof_edit_note")
-       */
-    public function note(Note $note=null, Request $request
-      ,EntityManagerInterface $manager)
-    {
-
-      if ($note) {
-        $form=$this->createForm(NoteType::class, $note);
-        $form->handleRequest($request);    
-        if ($form->isSubmitted() && $form->isValid()) {  
-             $note->setProf($this->getUser());         
- 
-             $manager->persist($note);
-             $manager->flush();
-            $this->addFlash('success', 'the note has been edited successfly !');
-            return $this->redirectToRoute('prof_synthese', ['id'=>$this->getUser()->getId()]);
-        }
-      }elseif(!$note){
-           
-              $note = new Note();
-              $form=$this->createForm(NoteType::class, $note);
-              $form->handleRequest($request);    
-              if ($form->isSubmitted() && $form->isValid()) {  
-    
-                $note->setProf($this->getUser());         
-                  $manager->persist($note);
-                  $manager->flush();
-                  $this->addFlash('success', 'the note has been added successfly !');
-                  return $this->redirectToRoute('prof_synthese', ['id'=>$this->getUser()->getId()]);
-              }
-            }
-
-      return $this->render("prof/note.html.twig",[
-          'noteForm'=>$form->createView()
-      ]);
-    }
-    
      /**
       * @Route("/prof/synthese/{id}", name="prof_synthese")
       */
     public function synthese(Prof $prof)
     {
-     // dd(count($prof->getStudents()));
-       $stds = [];
-      foreach ($prof->getStudents() as $std) {
-        $stds[] = $std->getNotes();
-        //dump($std->getNotes());
-      }
+      
      
       return $this->render("prof/synthese.html.twig", [
-     'notes'=>$stds,
-     'stds'=>$prof->getStudents(),
+  'prof'=>$prof
       ]);
+    }
+    public function user()
+    {
+      return $this->getUser();
     }
 }

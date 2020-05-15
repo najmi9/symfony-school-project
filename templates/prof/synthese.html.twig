@@ -1,9 +1,11 @@
-{% extends 'base.html.twig' %}
+{% extends 'prof/base.html.twig' %}
 
 {% block body %}
 
 	<div class="container">
- <table class="table table-striped">
+  {% for classe in prof.classes %}
+       {{ classe.name }} {{ classe.students | length }}
+       <table class="table table-striped">
       <thead>
         <th>#ID</th>
         <th>Image</th>
@@ -14,32 +16,31 @@
         <th></th>
       </thead>
       <tbody>
-     {% for std in stds %}
-       <tr>
-         <td> {{ std.id }} </td>
-         <td> <img src="{{ std.user.picture }}" /> </td>
-         <td> {{ std.user.name }} </td>
-         <td> {{ std.stdperinfo.cin }} </td>
-         <td> {{ std.stdchoice.bactype }} </td>
-         <td>
-            {% for note in std.notes %}
-                 
-              {% if note.prof == app.user %}
-                     {{ note.note }}
-                   {#  <a href="{{ path('prof_add_note') }}" class="btn btn-primary ">
-                                          <i class="fas fa-plus"></i>
-                                      </a> #}
-                   <a href="{{ path('prof_edit_note',{'id':note.id}) }}"class="        btn btn-success ">
-                          <i class="fas fa-edit"></i>
-                   </a>                           
-               
-            {% endif %}
-            {% endfor %}     
-         </td>
-       </tr>
-     {% endfor %}
- 
- </tbody>
+       {% for std in classe.students %}
+         {% if std.profile.state == "ACCEPTED"%}
+           <tr>
+            <td> {{ std.id }}</td>
+            <td> <img src="{{ std.user.picture }}" width="65px" height="65px" /></td>
+            <td> {{ std.user.name }}</td>
+            <td> {{ std.stdperinfo.cin }}</td>
+            <td> {{ std.stdchoice.bactype }}</td>
+            <td>
+                 {% for note in std.notes %}
+                    {% if note.prof == app.user %}                    
+                        {{ note.note }}                         
+                    {% endif %}
+                 {% endfor %} 
+            </td>
+            <td> 
+                <a href=" {{ path('prof_add_note',{'id':std.id}) }} " class="btn btn-success">
+                     <i class="far fa-edit"></i> 
+                </a>  
+           </td>
+          </tr>
+        {% endif %}
+       {% endfor %}
+       </tbody>
 </table>
+  {% endfor %}
 	</div>
 {% endblock %}

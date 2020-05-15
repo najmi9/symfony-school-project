@@ -11,3 +11,16 @@ chaque std ------> des notes, chaque note liée à un prof : juste l'afficher
 ----------------------------------------
 
 chaque prof ------> stds, chaque std------> note // prof à faire . --> editer un std
+
+ * @Security("is_granted('ROLE_USER') and user === ad.getAuthor()", message="Cette annonce ne vous appartient pas, vous ne pouvez pas la modifier")
+
+ /***
+ /**1----Voters.
+    2-pagination
+    3-- vérification de l'email
+    4-- reset mot de passe
+    5 -- payenement des users
+    6--layout et responsive
+    7-stistics
+    8- gérer les erreurs avec les formulaires
+    

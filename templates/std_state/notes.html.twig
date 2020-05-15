@@ -15,14 +15,14 @@
 <div class="container">
       <table class="table"> 
       	<thead>
-      		<th>Prof : </th>
+      		<th>Matière : </th>
       		<th> Note : </th>
       	</thead>
       	<tbody>
-      		{% for mynote in notes %}
+      		{% for note in notes %}
                 <tr>
-                	<td> {{ mynote.prof.matter}} </td>
-                	<td> {{ mynote.note }} </td>
+                	<td> {{ note.matter}} </td>
+                	<td> {{ note.note }} </td>
                 </tr>
       		{% endfor %}
       		<tr>

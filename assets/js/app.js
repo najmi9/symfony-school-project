@@ -13,3 +13,10 @@ import '../css/app.css';
  import 'bootstrap';
 
 console.log('Hello Webpack Encore! Edit me in assets/js/app.js');
+
+const eventSource = new EventSource('http://localhost:8000/.well-known/mercure?topic=' + encodeURIComponent('http://localhost:8000'));
+eventSource.onmessage = event => {
+    // Will be called every time an update is published by the server
+    console.log(JSON.parse(event.data));
+}
+

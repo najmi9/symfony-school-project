@@ -24,21 +24,6 @@ class ProfType extends AbstractType
             ->add('salaire')
             ->add('password')
             ->add('matter')
-            ->add('students', EntityType::class,[
-                 'class'=>Student::class,
-                 'choice_label' => function($std){
-                    return 'Name : '.$std->getUser()->getName().'  '.
-                          ' ,C.I.N : '.$std->getStdperinfo()->getCin().'  '.
-                          ' ,Filière : '.$std->getStdchoice()->getBactype();
-                 },
-                  'multiple' => true,
-                  'expanded' => true,
-                 'query_builder' => function (EntityRepository $er) {
-        return $er->createQueryBuilder('u')
-            ->orderBy('u.id', 'ASC');
-    },
-
-            ] )
             ->add('classes', EntityType::class,[
                  'class'=>Classe::class,
                  'choice_label' => 'name',

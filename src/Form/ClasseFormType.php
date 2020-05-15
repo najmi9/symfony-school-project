@@ -18,7 +18,9 @@ class ClasseFormType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('profs', EntityType::class,[
+           
+           
+           ->add('profs', EntityType::class,[
                  'class'=>Prof::class,
                  'choice_label' => 'name',
                   'multiple' => true,
@@ -43,6 +45,7 @@ class ClasseFormType extends AbstractType
     },
 
             ])
+            
             ->add('submit', SubmitType::class)
         ;
     }

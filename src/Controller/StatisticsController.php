@@ -2,22 +2,28 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Services\StatisticService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Repository\StudentRepository;
-use App\Repository\ProfRepository;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class StatisticsController extends AbstractController
 {
     /**
-     * @Route("/statistics", name="admin_statistics")
+     * @Route("/admin", name="admin_home")
      */
-    public function index(StudentRepository $stdRepo, ProfRepository $profRepo)
+    public function index(EntityManagerInterface $manager,
+     StatisticService $statsService)
     {
 
-        return $this->render('statistics/index.html.twig', [
-           'stds'=>$stdRepo->findAll(),
-           'profs'=>$profRepo->findAll()
+        $stats      = $statsService->getStats();
+      //  $bestAds    = $statsService->getAdsStats('DESC');
+       // $worstAds   = $statsService->getAdsStats('ASC');
+
+        return $this->render('admin/home.html.twig', [
+            'stats'     => $stats,
+           // 'bestAds'   => $bestAds,
+           // 'worstAds'  => $worstAds
         ]);
     }
 }
