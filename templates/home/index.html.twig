@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Home| NajmiAccademy.com{% endblock %}
+
 
 {% block body %}
    {% for label, messages in app.flashes %}
@@ -12,29 +13,124 @@
         </div>
 {% endfor %}
 
- {% include 'home/slider.html.twig' %}
 
-  <div class="container">
-    <h1>Comprendre le Monde, Construire l'avenir ! </h1>
-    <h4> Vous souhaitez avoir un Bac avec une bonne qualité d'étude et dans des meuilleurs conditions, Voilà ! </h4>
-  	<h2>Bienvenue Chez le Groupe Social privé XXXXXXXXX  </h2>
 
-    <div class="container">
-      Nous ensigne le programme du Ministère de l'éducation nationnale Marocain.
+  <div class="me">
+    <div class="row">
+      <div class="col-sm-12">
+        <h1 class="big-title text-center w-75">Comprendre le Monde, Construire l'avenir ! </h1>
+      </div>
+    
+
+    <div class="col-sm-12">
+      <a href="{{path('inscription')}}" class="btn btn-success btn-started"> Get started !</a>
+    </div>
+     
+    <div class="col-sm-12">
+      <a href="{{ path('app_prof_login')}}" class="btn btn-warning btn-teacher">Je suis  enseignant !</a>
+    </div>
+    </div>
+    
+  </div>
+  <div class="cards">
+ <div class="card card1" style="width: 18rem;">
+  <span style="color:skyblue; background-color: #f0ffff;" class="text-center">
+    <i class="fas fa-user-graduate fa-7x"></i>
+</span>
+  <div class="card-body bg-info text-light">
+     <h4 class="card-title" style="text-align: center; text-decoration: underline;"> professeurs certifiés</h4>
+    <p class="card-text">
+     Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+     tempor incididunt ut labore et dolore magna aliqua.
+     quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+     consequat. 
+    </p>
+  </div>
+</div>
+<div class="card card2" style="width: 18rem;">
+  <span style="color:#5f9ea0; background-color: #7fff00;" class="text-center">
+    <i class="fas fa-chalkboard-teacher fa-7x"></i>
+</span>
+  <div class="card-body bg-success text-light">
+     <h4 class="card-title" style="text-align: center; text-decoration: underline;"> éducation spéciale</h4>
+    <p class="card-text">
+     Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+     tempor incididunt ut labore et dolore magna aliqua.
+     quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+     consequat. 
+    </p>
+  </div>
+</div>
+<div class="card card3" style="width: 18rem;">
+  <span style="color:#191970; background-color: #778899;" class="text-center">
+    <i class="fas fa-futbol fa-7x"></i>
+</span>
+  <div class="card-body bg-secondary text-light">
+     <h4 class="card-title" style="text-align: center; text-decoration: underline;"> clubs de sport</h4>
+    <p class="card-text">
+     Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+     tempor incididunt ut labore et dolore magna aliqua.
+     quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+     consequat. 
+    </p>
+  </div>
+</div>
+</div>
+
+<div class="footer">
+   
+
+    <div class="social-media" >
+      <span style="color:#ff8c00; " 
+          data-toggle="tooltip" data-placement="top" title="Facebook"
+      class="text-center  span-media fa">
+      <i class="fab fa-facebook" ></i>
+    </span>
+    <span style="color:darkblue; "data-toggle="tooltip" data-placement="right" title="Twitter" class="text-center span-media tw">
+      <i class="fab fa-twitter-square" ></i>
+    </span>
+      <span style="color:magenta; " data-toggle="tooltip" data-placement="left" title="Instagarm"class="text-center span-media in">
+      <i class="fab fa-instagram" ></i>
+    </span>
+    <span style="color:brown; " data-toggle="tooltip" data-placement="bottom" title="Github"class="text-center span-media gi">
+      <i class="fab fa-github" ></i>
+    </span>
+
+    </div>
+    <div>
+      <button onClick="handleContactClick()" 
+      id="btn-contact-show" class="btn btn-primary btn-xl">Contact moi !</button>
     </div>
 
-<div class="container">
-  <mark>CREATIVITE</mark>
-  <mark>CURIOSITE</mark>
-  <mark>RESPECT</mark>
-  <mark>PRODUCTIVITE</mark>
+    <div  class="form-contact" id="form-contact">
+         
+      <form>
+        
+        <input type="email" name="" class="form-control message"
+        placeholder="Entrer votre email ...">
+        <textarea class="form-control message" placeholder="Dit moi quelque chose ..."></textarea>
+        <a href="" class="btn btn-info btn-contact">Envoyer !</a>
+        <button class="btn btn-danger" onClick="handleCancelClick()" 
+        id="btn-cancel">No thanks !</button>
+        
+      </form>
+    </div>
+     <p class="footer-text">Copyright NajmiAccademy 2020 !</p>
 </div>
-<div>
-  
-  L'espace est bien equipé et respecte les normes de sécurité et confort des stagiaires avec des grandes salles théoriques et pratiques pour assurer les meilleures conditions du travail.
 </div>
-<h1>
-  <h3>Obtenir le  Bac, c'est la première pas pour réussir </h3>
-</h1>
-  </div>
+<script type="text/javascript">
+  function handleContactClick() {
+     const form = document.getElementById('form-contact');
+     form.setAttribute('class', 'js-after');
+     
+     document.getElementById('btn-contact-show').style.display="none";
+        
+  }
+  function handleCancelClick(){
+        document.getElementById('form-contact').style.display="none";
+        const show = document.getElementById('btn-contact-show');
+              show.setAttribute('id',"btn-contact-show" );}
+</script>
 {% endblock %}
+
+

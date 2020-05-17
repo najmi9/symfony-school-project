@@ -112,7 +112,7 @@ class InscriptionController extends AbstractController
             $form->handleRequest($request);
        
             if ($form->isSubmitted() && $form->isValid()) {
-              dd($form->get('age')->getData());
+             
             $data = $request->request->get('std_per_info');
          // dd($data, $request->request);
   $date = $data['age']['day'].'-'.$data['age']['month'].'-'.$data['age']['year'];

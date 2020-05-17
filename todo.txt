@@ -16,7 +16,6 @@ chaque prof ------> stds, chaque std------> note // prof à faire . --> editer u
 
  /***
  /**1----Voters.
-    2-pagination
     5 -- payenement des users
     6--layout et responsive
     7-stistics
