@@ -4,11 +4,14 @@
 
 
 {% block body %}
-	{% for item in app.flashes('message') %}
-   <div class="alert alert-secondary">
-       {{ item }}
-   </div>
- {% endfor %}
+{% for label, messages in app.flashes %}
+    <div class="container">
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                <p>{{ message | raw }}</p>
+            {% endfor %}
+        </div>
+{% endfor %}
 	<div class="container">
 		   <div class="container">
 		   	   <table class="table">
@@ -22,7 +25,13 @@
 		   	   	 	<td><img src=" {{ user.picture }} "></td>
 		   	   	 	<td>  {{ user.name }} </td>
 		   	   	 	<td> {{ user.email }} </td>
-		   	   	 	<td> {{ info.cin }} </td>
+		   	   	 	<td> 
+                        {% if info.cin is defined %}
+                              {{ info.cin }} 
+                        {% else %}
+                        	NOT DEFINED
+                        {% endif %}
+                    </td>
 		   	   	 </tbody>
 		   	   </table>
            </div>

@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Note;
 use App\Entity\Student;
+use App\Form\ApplicationType;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -13,32 +14,17 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use App\Controller\ProfController;
 use  Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 
 
-class NoteType extends AbstractType
-{   public $clt;
-    function __construct(ProfController $ctl)
-    {
-        $this->ctl = $ctl;
-    }
+
+class NoteType extends ApplicationType
+{  
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder/*->add('students', EntityType::class,[
-                 'class'=>Student::class,
-                 'choice_label' => 'user.name',
-                 'expanded'=>true,
-                 'multiple'=>true,
-                 'query_builder' => function (EntityRepository $er) {
-        return $er->createQueryBuilder('u')
-            ->orderBy('u.classe', 'ASC');
-    },
-                 
-                  ]
-                )*/
-                ->add('note')
+        $builder
+                ->add('note',null, $this->getConfiguration("Note finale de l'étudiant", "Donnez une note finale de votre étudiant ..."))
                  ->add('submit', SubmitType::class)
         ;
     }

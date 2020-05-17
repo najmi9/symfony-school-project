@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Entity\PasswordUpdate;
 use App\Form\PasswordUpdateType;
+use App\Form\NewPassType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
@@ -197,28 +198,25 @@ public function resetPassword(Request $request, string $token, UserPasswordEncod
         return $this->redirectToRoute('app_user_login');
     }
 
-    // Si le formulaire est envoyé en méthode post
-    if ($request->isMethod('POST')) {
-        // On supprime le token
-        $user->setResetToken(null);
-
-        // On chiffre le mot de passe
-        $user->setPassword($passwordEncoder->encodePassword($user, $request->request->get('password')));
-
-        // On stocke
-        $entityManager = $this->getDoctrine()->getManager();
+ 
+   $form = $this->createForm(NewPassType::class);
+   $form->handleRequest($request);
+   if ($form->isSubmitted() && $form->isValid()) {
+          $user->setResetToken(null);
+          $user->setPassword($passwordEncoder->encodePassword($user, $form->get('plainPassword')->getData()));
+             $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($user);
         $entityManager->flush();
-
-        // On crée le success flash
-        $this->addFlash('success', 'Mot de passe mis à jour');
+         $this->addFlash('success', 'Mot de passe mis à jour');
 
         // On redirige vers la page de connexion
         return $this->redirectToRoute('app_user_login');
-    }else {
+  }
         // Si on n'a pas reçu les données, on affiche le formulaire
-        return $this->render('security/reset_password.html.twig', ['token' => $token]);
-    }
+        return $this->render('security/reset_password.html.twig',[
+            'passForm' => $form->createView()
+        ]);
+    
 
 }
 }

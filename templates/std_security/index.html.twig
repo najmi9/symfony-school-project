@@ -17,7 +17,7 @@
         <div class="col-md-3">&nbsp;</div>
         <div class="col-md-6">
             <div class="bg-light py-3 px-3">
-                <h1>Connectez vous !</h1>
+                <h1 class="text-center">Connectez vous!</h1>
 
       
 
@@ -43,12 +43,12 @@
                     value="{{ csrf_token('authenticate') }}"
                                        >
                     <div class="form-group">
-                        <button type="submit" class="btn btn-success">Connexion !</button>
+                        <button type="submit" class="btn btn-success p-2">Connexion !</button>
                         <a href="{{ path('inscription') }}" class="btn btn-link">Je n'ai pas encore de compte !</a>
                     </div>
                 </form>
             </div>
-            <a href="{{ path('app_forgotten_password') }}" class="btn btn-info w-100">do you forget password ?</a>
+            <a href="{{ path('app_forgotten_password') }}" class="btn btn-info w-100">Do you forget your password ?</a>
         </div>
     </div>
 

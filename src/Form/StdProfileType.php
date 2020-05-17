@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Form\ApplicationType;
 use App\Entity\StdProfile;
 use App\Entity\Classe;
 use Symfony\Component\Form\AbstractType;
@@ -11,7 +12,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class StdProfileType extends AbstractType
+
+class StdProfileType extends ApplicationType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -23,7 +25,7 @@ class StdProfileType extends AbstractType
                      'NOT VERIFIED'=>'NOT VERIFIED'
                 ]
             ])
-            ->add('note')
+            ->add('note', null, $this->getConfiguration("Charactère Quelconque :", "à vous de jouer ..."))
             ->add('submit', SubmitType::class)
         ;
     }

@@ -98,39 +98,14 @@
 
     </div>
     <div>
-      <button onClick="handleContactClick()" 
-      id="btn-contact-show" class="btn btn-primary btn-xl">Contact moi !</button>
+      <a href=" {{ path('contact')}} " 
+      id="btn-contact-show" class="btn btn-primary btn-xl">Contact moi !</a>
     </div>
 
-    <div  class="form-contact" id="form-contact">
-         
-      <form>
-        
-        <input type="email" name="" class="form-control message"
-        placeholder="Entrer votre email ...">
-        <textarea class="form-control message" placeholder="Dit moi quelque chose ..."></textarea>
-        <a href="" class="btn btn-info btn-contact">Envoyer !</a>
-        <button class="btn btn-danger" onClick="handleCancelClick()" 
-        id="btn-cancel">No thanks !</button>
-        
-      </form>
-    </div>
+
      <p class="footer-text">Copyright NajmiAccademy 2020 !</p>
 </div>
 </div>
-<script type="text/javascript">
-  function handleContactClick() {
-     const form = document.getElementById('form-contact');
-     form.setAttribute('class', 'js-after');
-     
-     document.getElementById('btn-contact-show').style.display="none";
-        
-  }
-  function handleCancelClick(){
-        document.getElementById('form-contact').style.display="none";
-        const show = document.getElementById('btn-contact-show');
-              show.setAttribute('id',"btn-contact-show" );}
-</script>
 {% endblock %}
 
 
