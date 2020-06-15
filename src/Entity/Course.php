@@ -26,7 +26,7 @@ class Course
      * @ORM\ManyToOne(targetEntity=Prof::class, inversedBy="courses")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $prof;
+   public $prof;
 
     /**
      * @ORM\Column(type="datetime")
@@ -42,6 +42,12 @@ class Course
      * @ORM\Column(type="text")
      */
     private $content;
+
+     /**
+     * @ORM\Column(type="string")
+     */
+    private $brochureFilename;
+
 
     public function getId(): ?int
     {
@@ -104,6 +110,18 @@ class Course
     public function setContent(string $content): self
     {
         $this->content = $content;
+
+        return $this;
+    }
+
+    public function getBrochureFilename()
+    {
+        return $this->brochureFilename;
+    }
+
+    public function setBrochureFilename($brochureFilename)
+    {
+        $this->brochureFilename = $brochureFilename;
 
         return $this;
     }

@@ -38,6 +38,11 @@ class Anounce
      */
     private $content;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Classe::class, inversedBy="anounces")
+     */
+    private $classe;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -87,6 +92,18 @@ class Anounce
     public function setContent(string $content): self
     {
         $this->content = $content;
+
+        return $this;
+    }
+
+    public function getClasse(): ?Classe
+    {
+        return $this->classe;
+    }
+
+    public function setClasse(?Classe $classe): self
+    {
+        $this->classe = $classe;
 
         return $this;
     }

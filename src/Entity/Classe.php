@@ -34,12 +34,18 @@ class Classe
      */
     private $students;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Anounce::class, mappedBy="classe")
+     */
+    private $anounces;
+
 
     public function __construct()
     {
         $this->profs = new ArrayCollection();
         $this->stdProfiles = new ArrayCollection();
         $this->students = new ArrayCollection();
+        $this->anounces = new ArrayCollection();
         
     }
 
@@ -111,6 +117,37 @@ class Classe
             // set the owning side to null (unless already changed)
             if ($student->getClasse() === $this) {
                 $student->setClasse(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Anounce[]
+     */
+    public function getAnounces(): Collection
+    {
+        return $this->anounces;
+    }
+
+    public function addAnounce(Anounce $anounce): self
+    {
+        if (!$this->anounces->contains($anounce)) {
+            $this->anounces[] = $anounce;
+            $anounce->setClasse($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnounce(Anounce $anounce): self
+    {
+        if ($this->anounces->contains($anounce)) {
+            $this->anounces->removeElement($anounce);
+            // set the owning side to null (unless already changed)
+            if ($anounce->getClasse() === $this) {
+                $anounce->setClasse(null);
             }
         }
 

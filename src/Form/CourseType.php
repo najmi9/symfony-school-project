@@ -11,6 +11,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use  Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use  Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Validator\Constraints\File;
 
 class CourseType extends ApplicationType
 {
@@ -18,8 +20,29 @@ class CourseType extends ApplicationType
     {
         $builder
             ->add('title', TextType::class, $this->getConfiguration("Titre de cours", "Donnez un titre de votre cours ...") )
-            ->add('picture', UrlType::class, $this->getConfiguration("Image de cours", "Donnez une image pour attirez l'attention ..."))
+
+            ->add('picture', FileType::class, [
+                'label' => "Une image de cours",
+                'multiple' => false,
+                'mapped' => false,
+                'required' => true
+            ])
             ->add('content', TextareaType::class,  $this->getConfiguration("Contenu de cours", "Donnez un contenu de cours ..."))
+            ->add('brochure', FileType::class, [
+                'label' => 'Brochure (PDF file)',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '2M',
+                        'mimeTypes' => [
+                            'application/pdf',
+                            'application/x-pdf',
+                       ],
+                        'mimeTypesMessage' => 'Please upload a valid PDF document',
+                    ])
+                ],
+            ])
             ->add('submit', SubmitType::class)
         ;
     }

@@ -16,24 +16,18 @@
 
 
   <div class="me">
-    <div class="row">
-      <div class="col-sm-12">
-        <h1 class="big-title text-center w-75">Comprendre le Monde, Construire l'avenir ! </h1>
-      </div>
-    
-
-    <div class="col-sm-12">
-      <a href="{{path('inscription')}}" class="btn btn-success btn-started"> Get started !</a>
-    </div>
-     
-    <div class="col-sm-12">
-      <a href="{{ path('app_prof_login')}}" class="btn btn-warning btn-teacher">Je suis  enseignant !</a>
-    </div>
-    </div>
-    
+      <p class="big-title text-center">Comprendre le Monde, Construire l'avenir ! </p>
+      <p class="btn-started">
+         <a href="{{path('inscription')}}" class="btn btn-success"> Get started !</a>  
+      </p>
+      <p class="btn-teacher">
+           <a href="{{ path('app_prof_login')}}" class="btn btn-warning">Je suis  enseignant !</a> 
+      </p>
   </div>
+
   <div class="cards">
- <div class="card card1" style="width: 18rem;">
+
+ <div class="card ">
   <span style="color:skyblue; background-color: #f0ffff;" class="text-center">
     <i class="fas fa-user-graduate fa-7x"></i>
 </span>
@@ -47,7 +41,8 @@
     </p>
   </div>
 </div>
-<div class="card card2" style="width: 18rem;">
+
+<div class="card">
   <span style="color:#5f9ea0; background-color: #7fff00;" class="text-center">
     <i class="fas fa-chalkboard-teacher fa-7x"></i>
 </span>
@@ -61,7 +56,8 @@
     </p>
   </div>
 </div>
-<div class="card card3" style="width: 18rem;">
+
+<div class="card">
   <span style="color:#191970; background-color: #778899;" class="text-center">
     <i class="fas fa-futbol fa-7x"></i>
 </span>
@@ -75,37 +71,11 @@
     </p>
   </div>
 </div>
-</div>
 
-<div class="footer">
-   
-
-    <div class="social-media" >
-      <span style="color:#ff8c00; " 
-          data-toggle="tooltip" data-placement="top" title="Facebook"
-      class="text-center  span-media fa">
-      <i class="fab fa-facebook" ></i>
-    </span>
-    <span style="color:darkblue; "data-toggle="tooltip" data-placement="right" title="Twitter" class="text-center span-media tw">
-      <i class="fab fa-twitter-square" ></i>
-    </span>
-      <span style="color:magenta; " data-toggle="tooltip" data-placement="left" title="Instagarm"class="text-center span-media in">
-      <i class="fab fa-instagram" ></i>
-    </span>
-    <span style="color:brown; " data-toggle="tooltip" data-placement="bottom" title="Github"class="text-center span-media gi">
-      <i class="fab fa-github" ></i>
-    </span>
-
-    </div>
-    <div>
-      <a href=" {{ path('contact')}} " 
-      id="btn-contact-show" class="btn btn-primary btn-xl">Contact moi !</a>
-    </div>
-
-
-     <p class="footer-text">Copyright NajmiAccademy 2020 !</p>
 </div>
 </div>
+
+
 {% endblock %}
 
 

@@ -11,7 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\UrlType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Gregwar\CaptchaBundle\Type\CaptchaType;
 
@@ -21,7 +21,14 @@ class UserType extends ApplicationType
     {
         $builder
             ->add('name', TextType::class, $this->getConfiguration("Nom Complète", "Donnez votre joulie nom ..."))
-            ->add('picture', UrlType::class, $this->getConfiguration("Image Perssonnelle", "Donnez votre vraie image  ..."))
+
+            ->add('picture', FileType::class,[
+                'label' => "Votre image",
+                'multiple' => false,
+                'mapped' => false,
+                'required' => true
+            ] )
+
             ->add('email', EmailType::class, $this->getConfiguration("Email", "Donnez votre email ..."))
              ->add('password', RepeatedType::class, [
     'type' => PasswordType::class,

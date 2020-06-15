@@ -12,30 +12,65 @@
             {% endfor %}
         </div>
 {% endfor %}
-<div class="container">
-  {% for prof in myclasse.profs %}
 
+<div class="anounces-courses">
+
+  {% if myclasse %}
+    <section class="courses" >
+      <h3 class="text-primary"> <i class="fas fa-book"></i> Les cours </h3>
+        {% for prof in myclasse.profs %}
       {% for course in prof.courses %}
-      	<div class="text-light bg-warning">
-      <h1> {{ course.title }} par {{ prof.name }} à {{ course.createdAt | date}}</h1>
-      <img src="{{ course.picture }}">
-      <div>
-      	{{ course.content}}
-      </div>
- </div>
+       <div class="card card-course">
+        <h5> {{ course.title }} </h5>
+        <p class="text-muted text-italic" style="margin:5px;">
+          <i class="fas fa-user"></i> {{ prof.name }} 
+          <small>
+            <i class="fas fa-clock"></i> à
+            {{ course.createdAt | date}}
+          </small>
+        </p>
+        <p class="text-center">
+          <img src="{{ course.picture }}"  />
+        </p>
+        <div class="text-center" >
+          {{ course.content}}
+        </div>
+     </div>
       {% endfor %}
+      {% endfor %}
+    </section>
+    <section class="anounces">
+      <h3 class="text-primary" > <i class="fas fa-bullhorn"></i> Les anonnces :  </h3>
+      {% for prof in myclasse.profs %}
 
         {% for anounce in prof.anounces %}
-      	<div class="text-light bg-warning">
-      <h1> {{ anounce.title }} par {{ prof.name }} à {{ anounce.createdAt |date }} </h1>
-     
-      <div>
-      	{{ anounce.content}}
+        <div class="card card-anounce">
+      <h4> {{ anounce.title }} </h4>
+      <p class="text-muted text-italic" style="margin:5px;" >
+          <i class="fas fa-user"></i> {{ prof.name }} 
+          <small>
+            <i class="fas fa-clock"></i> à
+            {{ anounce.createdAt | date}}
+          </small>
+      </p>    
+      <div class="text-center">
+        {{ anounce.content}}
       </div>
  </div>
       {% endfor %}
      
-  {% endfor %}
+  {% endfor %} 
+    </section>
+       
+
+  {% else %}
+  
+  <h2 class="text-center">
+    le  group administrtif n'a pas encore détrminé votre classe.  
+  </h2> 
+ 
+  {% endif %}
+
   
 </div>
 {% endblock %}

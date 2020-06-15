@@ -4,12 +4,18 @@
 
 {% block body %}
 
-    <div class="container">
-        <h1>Oups ! La page que vous recherchez n'existe pas !</h1>
-        <p>On a surement du mal vous renseigner ! Aucun soucis, vous pouvez retourner à l'accueil ou voir nos dernières annonces !</p>
+    <div class="container m-5 text-center">
+    	
+    	<h1 class="text-danger">  {{ status_code }}
+           {{ status_text }} </h1>
 
-        <a href="{{ path('homepage') }}" class="btn btn-primary">Retour à l'accueil</a>
-        <a href="{{ path('ads_index') }}" class="btn btn-success">Nos annonces</a>
+        <h3 class="m-5" >Oups ! La page que vous recherchez n'existe pas !</h3>
+        
+        
+        <a href="{{ path('home') }}" class="btn btn-primary">Retour à l'accueil</a>
+        
+
+        
     </div>
 
 {% endblock %}

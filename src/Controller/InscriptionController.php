@@ -23,6 +23,7 @@ use App\Form\StdChoiceType;
 use App\Entity\StdProfile;
 use App\Form\StdProfileType;
 use App\Entity\Student;
+use App\Services\FileUploaderUserService;
 
 
 
@@ -33,7 +34,7 @@ class InscriptionController extends AbstractController
      */
     public function index(Request $request, EntityManagerInterface $manager
     , UserPasswordEncoderInterface $passwordEncoder, \Swift_Mailer $mailer,
-    TokenGeneratorInterface $tokenGenerator)
+    TokenGeneratorInterface $tokenGenerator, FileUploaderUserService $fileUploader)
     {
        
               $user = new User();
@@ -46,6 +47,12 @@ class InscriptionController extends AbstractController
               $form->handleRequest($request);
                
               if ($form->isSubmitted() && $form->isValid()) {
+                  
+                   $pictureFile = $form['picture']->getData();
+                   $pictureFileName = $fileUploader->upload($pictureFile);
+                   $user->setPicture($pictureFileName);
+              
+
                    $token =$tokenGenerator->generateToken();
                    $data = $request->request->get('user');
                    $user->setPassword(
@@ -145,7 +152,7 @@ class InscriptionController extends AbstractController
     public function editInscription(User $user, Request $request, 
       EntityManagerInterface $manager, StudentRepository $finstdRepo
       , UserPasswordEncoderInterface $passwordEncoder,
-    UserRepository $stdRepo, \Swift_Mailer $mailer, TokenGeneratorInterface$tokenGenerator)
+    UserRepository $stdRepo, \Swift_Mailer $mailer, TokenGeneratorInterface$tokenGenerator, FileUploaderUserService $fileUploader)
     {
 
               $oldEmail = $user->getEmail();
@@ -155,6 +162,9 @@ class InscriptionController extends AbstractController
               $form->handleRequest($request);
        
               if ($form->isSubmitted() && $form->isValid()) {
+                 $pictureFile = $form['picture']->getData();
+                   $pictureFileName = $fileUploader->upload($pictureFile);
+                   $user->setPicture($pictureFileName);
                    $data = $request->request->get('user');
                    //Vérifier s'il y a un changement de l'email
                    if ($data['email'] != $oldEmail) {

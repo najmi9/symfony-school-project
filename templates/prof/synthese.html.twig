@@ -3,10 +3,10 @@
 
 {% block body %}
 
-	<div class="container">
+	<div class="stds">
   {% for classe in prof.classes %}
-       {{ classe.name }} {{ classe.students | length }}
-       <table class="table table-striped">
+      <h3> les étudiants de : {{ classe.name }}</h3>
+       <table class="table table-striped w-100">
       <thead>
         <th>#ID</th>
         <th>Image</th>
@@ -21,7 +21,7 @@
          {% if std.profile.state == "ACCEPTED"%}
            <tr>
             <td> {{ std.id }}</td>
-            <td> <img src="{{ std.user.picture }}" width="65px" height="65px" /></td>
+            <td> <img src="{{  asset('uploads/users/' ~ std.user.picture)}}" style="height:48px; width:48px;" /></td>
             <td> {{ std.user.name }}</td>
             <td> {{ std.stdperinfo.cin }}</td>
             <td> {{ std.stdchoice.bactype }}</td>
