@@ -16,6 +16,7 @@
 <div class="anounces-courses">
 
   {% if myclasse %}
+{% cache "user-courses" %}
     <section class="courses" >
       <h3 class="text-primary"> <i class="fas fa-book"></i> Les cours </h3>
         {% for prof in myclasse.profs %}
@@ -39,6 +40,7 @@
       {% endfor %}
       {% endfor %}
     </section>
+{% endcache %}
     <section class="anounces">
       <h3 class="text-primary" > <i class="fas fa-bullhorn"></i> Les anonnces :  </h3>
       {% for prof in myclasse.profs %}

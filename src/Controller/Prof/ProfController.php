@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Prof;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,6 +40,7 @@ class ProfController extends AbstractController
      */
     public function profile(Prof $prof)
     {
+      $this->denyAccessUnlessGranted('view', $prof);
     	return $this->render("prof/profile.html.twig",[
           'prof'=>$prof
     	]);
@@ -88,6 +89,8 @@ class ProfController extends AbstractController
     */
     public function editCourse(Course $course, Request $request, EntityManagerInterface $manager, FileUploaderService $fileUploader)
     {
+      $this->denyAccessUnlessGranted('view', $course->getProf());
+
        $form=$this->createForm(CourseType::class, $course);
         $form->handleRequest($request);    
         if ($form->isSubmitted() && $form->isValid()) {  
@@ -123,6 +126,8 @@ class ProfController extends AbstractController
     
     public function removeCourse(Course $course, EntityManagerInterface $maneger)
     {
+      $this->denyAccessUnlessGranted('edit', $course->getProf());
+
       $maneger->remove($course);
       $maneger->flush();
       $this->addFlash('success', 'the Course has been elimited successfly !');
@@ -131,11 +136,13 @@ class ProfController extends AbstractController
     /**
      * @Route("/prof/anounce/edit/{id}", name="prof_edit_anounce")
        * @Route("/prof/anounce/add", name="prof_add_anounce")
-       * @Security("is_granted('ROLE_PROF') and user ===anounce.prof", message="Ce profile ne vous appartient pas, vous ne pouvez pas la modifier")
+       * @IsGranted("ROLE_PROF")
      */
     public function anounce(Anounce $anounce=null, Request $request, EntityManagerInterface $manager, AnounceRepository $anounceRepo)
     {
         if ($anounce) {
+      $this->denyAccessUnlessGranted('view', $$anounce->getProf());
+
            $form = $this->createForm(AnounceType::class, $anounce);
            $form->handleRequest($request);
            if ($form->isSubmitted() && $form->isValid()) {  
@@ -175,6 +182,8 @@ class ProfController extends AbstractController
     
     public function removeAnounce(Anounce $anounce, EntityManagerInterface $maneger)
     {
+      $this->denyAccessUnlessGranted('view', $anounce->getProf());
+
       $maneger->remove($anounce);
       $maneger->flush();
       $this->addFlash('success', 'the Anounce has been elimited successfly !');
@@ -187,6 +196,7 @@ class ProfController extends AbstractController
       */
     public function synthese(Prof $prof)
     {
+      $this->denyAccessUnlessGranted('view', $prof);
       
      
       return $this->render("prof/synthese.html.twig", [

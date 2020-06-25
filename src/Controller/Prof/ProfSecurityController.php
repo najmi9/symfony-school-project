@@ -1,57 +1,56 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Prof;
 
-use App\Entity\User;
-use App\Repository\UserRepository;
+use App\Form\NewPassType;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\PasswordUpdate;
 use App\Form\PasswordUpdateType;
-use App\Form\NewPassType;
+use App\Form\ResetPassType;
 use Symfony\Component\Form\FormError;
+use App\Entity\Prof;
+use App\Repository\ProfRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use App\Form\ResetPassType;
-use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
-class StdSecurityController extends AbstractController
+class ProfSecurityController extends AbstractController
 {
-   /**
-     * @Route("/student/login", name="app_user_login")
+    /**
+     * @Route("/prof/login", name="app_prof_login")
      */
-    public function login(AuthenticationUtils $authenticationUtils): Response
+    public function index(AuthenticationUtils $authenticationUtils)
     {
-         if ($this->getUser()) {
+          if ($this->getUser()) {
              return $this->redirectToRoute('home');
          }
-
-        // get the login error if there is one
-        $error = $authenticationUtils->getLastAuthenticationError();
+            $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
-        $lastUsername = $authenticationUtils->getLastUsername();
-
-        return $this->render('std_security/index.html.twig', ['last_username' => $lastUsername, 'error' => $error]);
+           $lastUsername = $authenticationUtils->getLastUsername();
+        return $this->render('prof_security/index.html.twig',[
+            'last_username' => $lastUsername, 'error' => $error
+        ]);
     }
 
-    /**
-     * @Route("/student/logout", name="app_user_logout")
-     */
+   
+   /**
+    * @Route("/prof/logout", name="app_prof_logout")
+    */
     public function logout()
     {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+    	throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
-
-   /**
+    /**
      * Permet de modifier le mot de passe
      *
-     * @Route("/student/password-update", name="student_update_password")
-     * @IsGranted("ROLE_USER")
+     * @Route("/prof/password-update", name="prof_update_password")
+     * @IsGranted("ROLE_PROF")
      * 
      * @return Response
      */
@@ -88,35 +87,15 @@ class StdSecurityController extends AbstractController
         }
 
 
-        return $this->render('std_state/password.html.twig', [
+        return $this->render('prof/password.html.twig', [
             'form' => $form->createView()
         ]);
     }
 
-    /**
-     * Vérification de l'email
-     * @Route("/account/confirmation/{token}", name="student_confirm_email")
-     */
-     public function confirmEmail($token, UserRepository $userRepo, EntityManagerInterface $manager){
-        
-         $user = $userRepo->findOneByActivationToken($token);
-         if ($user) {
-            $user->setActivationToken(null);
-            $manager->persist($user);
-            $manager->flush();
-            $this->addFlash("success", "Your email has been confirmed successfly ! Now complete your information please !");
-            return $this->redirectToRoute('app_user_login');
-         } else {
-             $this->addFlash("danger", "Oops! something go wrong");
-             return $this->redirectToRoute('home');
-         }
-         
-    
-     }
-/**
- * @Route("/forgotten-password", name="app_forgotten_password")
- */
-public function oubliPass(Request $request, UserRepository $userRepo, \Swift_Mailer $mailer, TokenGeneratorInterface $tokenGenerator
+   /**
+   * @Route("/account/forgotten-password", name="app_prof_forgotten_password")
+   */
+public function oubliPass(Request $request, ProfRepository $userRepo, \Swift_Mailer $mailer, TokenGeneratorInterface $tokenGenerator
 ): Response
 {
     // On initialise le formulaire
@@ -139,7 +118,7 @@ public function oubliPass(Request $request, UserRepository $userRepo, \Swift_Mai
             $this->addFlash('danger', 'Cette adresse e-mail est inconnue');
             
             // On retourne sur la page de connexion
-            return $this->redirectToRoute('app_user_login');
+            return $this->redirectToRoute('app_prof_login');
         }
 
         // On génère un token
@@ -153,18 +132,18 @@ public function oubliPass(Request $request, UserRepository $userRepo, \Swift_Mai
             $entityManager->flush();
         } catch (\Exception $e) {
             $this->addFlash('warning', $e->getsuccess());
-            return $this->redirectToRoute('app_user_login');
+            return $this->redirectToRoute('app_prof_login');
         }
 
         // On génère l'URL de réinitialisation de mot de passe
-        $url = $this->generateUrl('app_reset_password', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
+        $url = $this->generateUrl('app_prof_reset_password', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
 
         // On génère l'e-mail
         $message = (new \Swift_Message('Mot de passe oublié'))
-            ->setFrom('votre@adresse.fr')
+            ->setFrom('norpely@gmail.com')
             ->setTo($user->getEmail())
             ->setBody(
-                "Bonjour,<br><br>Une demande de réinitialisation de mot de passe a été effectuée pour le site Nouvelle-Techno.fr. Veuillez cliquer sur le lien suivant : " . $url,
+                "Bonjour,<br><br>Une demande de réinitialisation de mot de passe a été effectuée pour le site NajmiAccademy. Veuillez cliquer sur le lien suivant : " . $url,
                 'text/html'
             )
         ;
@@ -176,7 +155,7 @@ public function oubliPass(Request $request, UserRepository $userRepo, \Swift_Mai
         $this->addFlash('success', 'E-mail de réinitialisation du mot de passe envoyé !');
 
         // On redirige vers la page de login
-        return $this->redirectToRoute('app_user_login');
+        return $this->redirectToRoute('app_prof_login');
     }
 
     // On envoie le formulaire à la vue
@@ -184,39 +163,42 @@ public function oubliPass(Request $request, UserRepository $userRepo, \Swift_Mai
 }
 
 /**
- * @Route("/reset_pass/{token}", name="app_reset_password")
+ * @Route("/account/reset_pass/{token}", name="app_prof_reset_password")
  */
 public function resetPassword(Request $request, string $token, UserPasswordEncoderInterface $passwordEncoder)
 {
     // On cherche un utilisateur avec le token donné
-    $user = $this->getDoctrine()->getRepository(User::class)->findOneByResetToken($token);
+    $user = $this->getDoctrine()->getRepository(Prof::class)->findOneByResetToken($token);
 
     // Si l'utilisateur n'existe pas
     if ($user === null) {
         // On affiche une erreur
         $this->addFlash('danger', 'Token Inconnu');
-        return $this->redirectToRoute('app_user_login');
+        return $this->redirectToRoute('app_prof_login');
     }
 
- 
-   $form = $this->createForm(NewPassType::class);
+    // Si le formulaire est envoyé en méthode post
+  $form = $this->createForm(NewPassType::class);
    $form->handleRequest($request);
+
    if ($form->isSubmitted() && $form->isValid()) {
           $user->setResetToken(null);
-          $user->setPassword($passwordEncoder->encodePassword($user, $form->get('plainPassword')->getData()));
-             $entityManager = $this->getDoctrine()->getManager();
+        //  dd($request->request, $form->get('plainPassword')->getData());
+          $user->setPassword($passwordEncoder->encodePassword($user,
+            $form->get('plainPassword')->getData()));
+    $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($user);
         $entityManager->flush();
          $this->addFlash('success', 'Mot de passe mis à jour');
 
         // On redirige vers la page de connexion
-        return $this->redirectToRoute('app_user_login');
+        return $this->redirectToRoute('app_prof_login');
   }
         // Si on n'a pas reçu les données, on affiche le formulaire
         return $this->render('security/reset_password.html.twig',[
             'passForm' => $form->createView()
         ]);
-    
 
-}
+
+ }   
 }

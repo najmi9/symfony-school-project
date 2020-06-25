@@ -13,6 +13,7 @@
             {% endfor %}
         </div>
 {% endfor %}
+{% cache "user-notes" %}
 <div class="container">
       <table class="table"> 
       	<thead>
@@ -35,4 +36,5 @@
       	</tbody>
       </table>
 </div>
+{% endcache %}
 {% endblock %}

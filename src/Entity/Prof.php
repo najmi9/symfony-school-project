@@ -85,6 +85,12 @@ class Prof implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $resetToken;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Depayement::class, inversedBy="prof")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $depayement;
     
 
     public function __construct()
@@ -356,6 +362,18 @@ class Prof implements UserInterface
      public function setResetToken(?string $resetToken): self
      {
          $this->resetToken = $resetToken;
+
+         return $this;
+     }
+
+     public function getDepayement(): ?Depayement
+     {
+         return $this->depayement;
+     }
+
+     public function setDepayement(?Depayement $depayement): self
+     {
+         $this->depayement = $depayement;
 
          return $this;
      }

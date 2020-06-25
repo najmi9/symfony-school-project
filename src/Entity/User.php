@@ -16,7 +16,7 @@ class User implements UserInterface
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    public $id;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -46,7 +46,7 @@ class User implements UserInterface
     /**
      * @ORM\OneToOne(targetEntity=Student::class, mappedBy="user", cascade={"persist", "remove"})
      */
-    private $student;
+    public $student;
 
     /**
      * @ORM\Column(type="string", length=55, nullable=true)

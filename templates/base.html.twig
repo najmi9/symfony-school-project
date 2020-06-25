@@ -19,9 +19,9 @@
         {% block body %}{% endblock %}
        
            
-       
+        {% cache "footer" %}
         {% include 'partials/footer.html.twig' %}
-      
+        {% endcache %}
            {% block javascripts %}
        {{ encore_entry_script_tags('app')}}
            {% endblock %}

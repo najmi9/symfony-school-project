@@ -41,7 +41,7 @@ class Student
      * @ORM\OneToOne(targetEntity=StdPerInfo::class, inversedBy="student", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=true)
      */
-    private $stdperinfo;
+    public $stdperinfo;
 
 
     /**
@@ -62,10 +62,16 @@ class Student
      */
     private $classe;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Payement::class, mappedBy="students")
+     */
+    private $payements;
+
 
     public function __construct()
     {
         $this->notes = new ArrayCollection();
+        $this->payements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -163,6 +169,37 @@ class Student
     public function setClasse(?Classe $classe): self
     {
         $this->classe = $classe;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Payement[]
+     */
+    public function getPayements(): Collection
+    {
+        return $this->payements;
+    }
+
+    public function addPayement(Payement $payement): self
+    {
+        if (!$this->payements->contains($payement)) {
+            $this->payements[] = $payement;
+            $payement->setStudents($this);
+        }
+
+        return $this;
+    }
+
+    public function removePayement(Payement $payement): self
+    {
+        if ($this->payements->contains($payement)) {
+            $this->payements->removeElement($payement);
+            // set the owning side to null (unless already changed)
+            if ($payement->getStudents() === $this) {
+                $payement->setStudents(null);
+            }
+        }
 
         return $this;
     }
