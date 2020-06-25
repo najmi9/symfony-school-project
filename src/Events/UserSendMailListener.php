@@ -19,7 +19,8 @@ class UserSendMailListener extends AbstractController
     function __construct(TokenGeneratorInterface $tokenGenerator, \Swift_Mailer $mailer)
     {
     	$this->tokenGenerator = $tokenGenerator;
-    	$this->mailer = $mailer;
+    	$this->mailer = $mailer; 
+      
     }
 
     public function postUpdate(User $user, LifecycleEventArgs $event)
