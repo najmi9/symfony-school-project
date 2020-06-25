@@ -11,7 +11,7 @@ class UsersFixtures extends Fixture
 {
     public function load(ObjectManager $manager)
     {      
-    	$faker = Factory::craete('fr_FR');
+    	$faker = Factory::create('fr_FR');
 
     	for($i=0; $i<20; $i++){
     		$stdinfo = new StdPerInfo();
