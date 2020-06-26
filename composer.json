@@ -82,8 +82,7 @@
             "@auto-scripts"
         ],
         "compile":[
-        "php bin/console doctrine:schema:update --force",
-        "yarn build"
+        "php bin/console doctrine:schema:update --force"
         ]
     },
 
