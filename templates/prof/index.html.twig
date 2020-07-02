@@ -2,6 +2,14 @@
 {% block title %}Prof| NajmiAccademy.com{% endblock %}
 
 {% block body %}
+   {% for label, messages in app.flashes %}
+    <div class="container">
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                <p>{{ message | raw }}</p>
+            {% endfor %}
+        </div>
+{% endfor %}
   <div class="container mt-3">
 	<h3 class="alert alert-primary"> Bienvenue Dans NajmiAccademy :</h3>
  	<div class="body-prof">

@@ -4,6 +4,14 @@
 {% block title %}Note| NajmiAccademy.com{% endblock %}
 
 {% block body %}
+ {% for label, messages in app.flashes %}
+    <div class="container">
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                <p>{{ message | raw }}</p>
+            {% endfor %}
+        </div>
+{% endfor %}
 
 <div class="container">
 	<div class="card text-center bg-info" >

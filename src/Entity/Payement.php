@@ -17,10 +17,6 @@ class Payement
      */
     private $id;
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Student::class, inversedBy="payements")
-     */
-    private $students;
 
     /**
      * @ORM\Column(type="datetime")
@@ -33,21 +29,30 @@ class Payement
      */
     private $month;
 
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $price;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Student::class, inversedBy="payement", cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $student;
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getStudents(): ?Student
+    public function getPrice(): ?string
     {
-        return $this->students;
+        return $this->price;
     }
 
-    public function setStudents(?Student $students): self
+    public function setPrice(string $price): void
     {
-        $this->students = $students;
-
-        return $this;
+        $this->price = $price;
     }
 
 
@@ -71,6 +76,18 @@ class Payement
     public function setMonth(?Month $month): self
     {
         $this->month = $month;
+
+        return $this;
+    }
+
+    public function getStudent(): ?Student
+    {
+        return $this->student;
+    }
+
+    public function setStudent(Student $student): self
+    {
+        $this->student = $student;
 
         return $this;
     }

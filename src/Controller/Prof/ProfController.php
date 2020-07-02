@@ -21,6 +21,9 @@ use Symfony\Component\HttpFoundation\File\File;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
+/**
+ * @IsGranted("ROLE_PROF")
+ */
 class ProfController extends AbstractController
 {
     /**

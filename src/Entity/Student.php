@@ -50,7 +50,7 @@ class Student
      */
     public $user;
 
-    
+
 
     /**
      * @ORM\ManyToMany(targetEntity=Note::class, mappedBy="students")
@@ -63,15 +63,15 @@ class Student
     private $classe;
 
     /**
-     * @ORM\OneToMany(targetEntity=Payement::class, mappedBy="students")
+     * @ORM\OneToOne(targetEntity=Payement::class, mappedBy="student", cascade={"persist", "remove"})
      */
-    private $payements;
+    private $payement;
+
 
 
     public function __construct()
     {
         $this->notes = new ArrayCollection();
-        $this->payements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -116,11 +116,11 @@ class Student
 
     public function setStdperinfo(StdPerInfo $stdperinfo): void
     {
-        $this->stdperinfo = $stdperinfo;       
+        $this->stdperinfo = $stdperinfo;
     }
 
-  
-  
+
+
     public function getUser(): ?User
     {
         return $this->user;
@@ -173,32 +173,18 @@ class Student
         return $this;
     }
 
-    /**
-     * @return Collection|Payement[]
-     */
-    public function getPayements(): Collection
+    public function getPayement(): ?Payement
     {
-        return $this->payements;
+        return $this->payement;
     }
 
-    public function addPayement(Payement $payement): self
+    public function setPayement(Payement $payement): self
     {
-        if (!$this->payements->contains($payement)) {
-            $this->payements[] = $payement;
-            $payement->setStudents($this);
-        }
+        $this->payement = $payement;
 
-        return $this;
-    }
-
-    public function removePayement(Payement $payement): self
-    {
-        if ($this->payements->contains($payement)) {
-            $this->payements->removeElement($payement);
-            // set the owning side to null (unless already changed)
-            if ($payement->getStudents() === $this) {
-                $payement->setStudents(null);
-            }
+        // set the owning side of the relation if necessary
+        if ($payement->getStudent() !== $this) {
+            $payement->setStudent($this);
         }
 
         return $this;

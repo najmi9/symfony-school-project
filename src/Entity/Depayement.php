@@ -35,6 +35,11 @@ class Depayement
      */
     private $month;
 
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $price;
+
     public function __construct()
     {
         $this->prof = new ArrayCollection();
@@ -48,6 +53,16 @@ class Depayement
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
+    }
+
+    public function getPrice(): ?string
+    {
+        return $this->price;
+    }
+
+    public function setPrice(string $price): void
+    {
+        $this->price = $price;
     }
 
     public function setCreatedAt(\DateTimeInterface $createdAt): self

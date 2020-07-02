@@ -61,12 +61,14 @@
       </li>  
 
     </ul>
-
-    <ul class="navbar-nav ml-auto">
+   {% if app.user %}
+         <ul class="navbar-nav ml-auto">
       <li class="nav-item active">
       <img <img src="{{  asset('uploads/users/' ~ app.user.picture)}}" style="border-radius:100px;" width="90px" height="80px"> 
       </li>
     </ul>
+   {% endif %}
+   
 
   </div>
 </nav>

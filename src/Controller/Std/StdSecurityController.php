@@ -103,7 +103,7 @@ class StdSecurityController extends AbstractController
      * Vérification de l'email
      * @Route("/account/confirmation/{token}", name="student_confirm_email")
      */
-     public function confirmEmail($token, UserRepository $userRepo, EntityManagerInterface $manager){
+     public function confirmEmail(string $token=null, UserRepository $userRepo, EntityManagerInterface $manager){
         
          $user = $userRepo->findOneByActivationToken($token);
          if ($user) {
@@ -158,7 +158,7 @@ public function oubliPass(Request $request, UserRepository $userRepo, \Swift_Mai
             $entityManager->persist($user);
             $entityManager->flush();
         } catch (\Exception $e) {
-            $this->addFlash('warning', $e->getsuccess());
+            $this->addFlash('warning',"une erreur se produit réysser plus tard ");
             return $this->redirectToRoute('app_user_login');
         }
 
@@ -190,10 +190,14 @@ public function oubliPass(Request $request, UserRepository $userRepo, \Swift_Mai
 }
 
 /**
- * @Route("/reset_pass/{token}", name="app_reset_password")
+ * @Route("/reset-password/{token}", name="app_reset_password")
  */
-public function resetPassword(Request $request, string $token, UserPasswordEncoderInterface $passwordEncoder)
+public function resetPassword(Request $request, string $token=null, UserPasswordEncoderInterface $passwordEncoder)
 {
+    if (!$token) {
+      throw new NOtFoundException("token n'est existe pas !", 1);
+      
+    }
     // On cherche un utilisateur avec le token donné
     $user = $this->getDoctrine()->getRepository(User::class)->findOneByResetToken($token);
 

@@ -1,0 +1,62 @@
+{% extends 'admin/base.html.twig' %}
+{% block body %}
+
+<a href="{{ path('admin_add_month') }}" class="btn btn-link">
+	<i class="fas fa-plus"></i> ajmuter une mois
+</a>
+ {% if months|length == 0 %}
+ 	<h3 class="text-center bg-light">
+ 		Il n'a pas encore des mois !
+ 	</h3>
+ {% else %}
+  <table class="table">
+  	<header>
+      <th>Mois N°: </th>
+      <th>Nom: </th>
+      <th>Revenus : </th>
+      <th> XXXXX </th>
+      <th></th>
+  	</header>
+  	<body>
+  		{% for month in months %}
+            <tr>
+            	<td> {{ month.id }} </td>
+            	<td> {{ month.name }} </td>
+            	<td> {{ month.inputs }} </td>
+            	<td> {{ month.outputs }} </td>
+              <td>
+                <a href="{{path('admin_remove_month', {'id': month.id })}}"
+                class="btn btn-sm">
+                  <i class="fas fa-trash"></i>
+                  Supprimer !
+                </a>
+                 <a href="{{path('admin_edit_month', {'id': month.id })}}"
+                class="btn btn-sm">
+                  <i class="fas fa-edit"></i>
+                  Supprimer !
+                </a>
+              </td>
+            </tr>
+  		{% endfor %}
+  	</body>
+  </table>
+{% endif %}
+
+ {{ form_start(monthForm) }}
+ <div class="form-group">
+  {{ form_row(monthForm.name, {"attr":{"class":"form-control"}}) }}
+ </div>
+ <div class="form-group">
+  {{ form_row(monthForm.outputs, {"attr":{"class":"form-control"}}) }}
+ </div>
+ <div class="form-group">
+  {{ form_row(monthForm.inputs, {"attr":{"class":"form-control"}}) }}
+ </div>
+ <div class="form-group">
+ 	<button class="btn btn-primary" type="submit">
+ 		Ajouter ce Moins !
+ 	</button>
+ </div>
+ {{ form_end(monthForm) }}
+
+{% endblock %}
