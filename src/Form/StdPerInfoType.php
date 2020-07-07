@@ -21,7 +21,13 @@ class StdPerInfoType extends ApplicationType
     {
         $builder
            
-            ->add('age', DateType::class, $this->getConfiguration("Date de naissance", "Donnez votredate de naissance ..."))
+            ->add('age', DateType::class,[
+          'years' => range(date('Y')-16, date('Y')-30),
+          'attr'=>[
+            "placeholder"=>"Donnez votre date de naissance ..."
+             ],
+          'label'=>"Date de Naissance :" 
+            ])
             ->add('cin')
             ->add('gendre', ChoiceType::class, [
     'choices'  => [

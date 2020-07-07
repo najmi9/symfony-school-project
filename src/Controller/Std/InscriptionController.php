@@ -37,8 +37,7 @@ class InscriptionController extends AbstractController
     public function editInfo(StdPerInfo $stdInfo=null, EntityManagerInterface 
       $manager, Request $request, StudentRepository $stdRepo)
     {
-          
-       $this->denyAccessUnlessGranted('edit', $user);
+      
         if ($stdInfo) {
            $this->denyAccessUnlessGranted('edit', $stdInfo);
               $finStd =  $stdRepo->findOneByStdperinfo($stdInfo);

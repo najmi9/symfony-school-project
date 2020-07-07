@@ -135,6 +135,9 @@
     "php": {
         "version": "7.4"
     },
+    "php-amqplib/php-amqplib": {
+        "version": "v2.11.3"
+    },
     "phpdocumentor/reflection-common": {
         "version": "2.1.0"
     },
@@ -143,6 +146,9 @@
     },
     "phpdocumentor/type-resolver": {
         "version": "1.1.0"
+    },
+    "phpseclib/phpseclib": {
+        "version": "2.0.27"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -335,6 +341,18 @@
             "version": "1.0",
             "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
         }
+    },
+    "symfony/messenger": {
+        "version": "4.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.3",
+            "ref": "8a2675c061737658bed85102e9241c752620e575"
+        },
+        "files": [
+            "config/packages/messenger.yaml"
+        ]
     },
     "symfony/mime": {
         "version": "v5.0.8"

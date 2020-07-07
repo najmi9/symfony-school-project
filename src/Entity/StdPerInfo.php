@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use App\Repository\StdPerInfoRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,6 +20,7 @@ class StdPerInfo
     private $id;
     /**
      * @ORM\Column(type="date")
+     * @Assert\LessThan("-15 years")
      */
     private $age;
 

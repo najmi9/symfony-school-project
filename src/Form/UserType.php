@@ -26,7 +26,8 @@ class UserType extends ApplicationType
                 'label' => "Votre image",
                 'multiple' => false,
                 'mapped' => false,
-                'required' => true
+                'required' => true,
+               
             ] )
 
             ->add('email', EmailType::class, $this->getConfiguration("Email", "Donnez votre email ..."))

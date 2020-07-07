@@ -16,10 +16,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use App\Form\ResetPassType;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Contracts\Cache\CacheInterface;
+use App\Message\ResetPasswordEmailNotification;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class StdSecurityController extends AbstractController
 {
@@ -122,7 +123,7 @@ class StdSecurityController extends AbstractController
 /**
  * @Route("/forgotten-password", name="app_forgotten_password")
  */
-public function oubliPass(Request $request, UserRepository $userRepo, \Swift_Mailer $mailer, TokenGeneratorInterface $tokenGenerator
+public function oubliPass(Request $request, UserRepository $userRepo, TokenGeneratorInterface $tokenGenerator, MessageBusInterface $bus
 ): Response
 {
     // On initialise le formulaire
@@ -153,32 +154,19 @@ public function oubliPass(Request $request, UserRepository $userRepo, \Swift_Mai
 
         // On essaie d'écrire le token en base de données
         try{
+
             $user->setResetToken($token);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
+
         } catch (\Exception $e) {
             $this->addFlash('warning',"une erreur se produit réysser plus tard ");
             return $this->redirectToRoute('app_user_login');
         }
 
-        // On génère l'URL de réinitialisation de mot de passe
-        $url = $this->generateUrl('app_reset_password', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
+         $bus->dispatch(new ResetPasswordEmailNotification($user->getEmail()));
 
-        // On génère l'e-mail
-        $message = (new \Swift_Message('Mot de passe oublié'))
-            ->setFrom('votre@adresse.fr')
-            ->setTo($user->getEmail())
-            ->setBody(
-                "Bonjour,<br><br>Une demande de réinitialisation de mot de passe a été effectuée pour le site Nouvelle-Techno.fr. Veuillez cliquer sur le lien suivant : " . $url,
-                'text/html'
-            )
-        ;
-
-        // On envoie l'e-mail
-        $mailer->send($message);
-
-        // On crée le success flash de confirmation
         $this->addFlash('success', 'E-mail de réinitialisation du mot de passe envoyé !');
 
         // On redirige vers la page de login

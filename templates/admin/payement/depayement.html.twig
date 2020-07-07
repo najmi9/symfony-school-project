@@ -1,0 +1,45 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block body %}
+
+<div class="container">
+<div>
+	{% if depayements|length == 0 %}
+      <div class="alert">
+      	<h3 class="alert-heading text-center"> 
+      		No depayements encore !
+      	</h3>
+      </div>
+	{% else %}
+		{% for item in depayements %}
+        <h1> item.price </h1>
+		{% endfor %}
+    {% endif %}
+
+{{ form_start(depayementForm) }}
+
+   <div class="form-group">
+      {{ form_row(depayementForm.price, {"attr":{"class":"form-control","placeholder":"entrz le prix  de prof !"}}) }}
+   </div>
+   <div class="form-group">
+      {{ form_row(depayementForm.month, {"attr":{"class":"form-control"}}) }}
+   </div>
+   <div class="form-group">
+     {{ form_row(depayementForm.prof, {"attr":{"class":"form-control"}}) }}
+   </div>
+ 
+  <div class="form-group">
+  	<button class="btn btn-outline-success">
+  		payer au prof
+  	</button>
+  </div>
+
+{{ form_end(depayementForm) }}
+   
+</div>
+</div>
+
+
+
+{% endblock %}
+

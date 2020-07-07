@@ -26,7 +26,9 @@ class AddDepayementController extends AbstractController
 	{ 
 	    if ($depayement) {
 		   $form = $this->createForm(DepayementType::class, $depayement);
+
 		   $form->handleRequest($request);
+           
            if ($form->isSubmitted() && $form->isValid()) {
            	  $month->setName($form->get('name')->gatDate())
                     ->setOutputs($form->get('outputs')->gatDate())
@@ -38,6 +40,7 @@ class AddDepayementController extends AbstractController
         	  return $this->redirectToRoute('admin_add_depayement');
            }
 	    }
+
 		$depayement = new Depayement();
 		$form = $this->createForm(DepayementType::class, $depayement);
 		$form->handleRequest($request);
@@ -47,6 +50,7 @@ class AddDepayementController extends AbstractController
         	$this->addFlash("info", "Votre depaiement est bien ajouté !");
         	return $this->redirectToRoute('admin_add_depayement');
         }
+
 		return $this->render('admin/payement/depayement.html.twig', [
          'depayements'=>$depayementRepo->findAll(),
          'depayementForm'=>$form->createView()
