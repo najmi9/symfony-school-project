@@ -203,11 +203,7 @@ class ProfController extends AbstractController
       
      
       return $this->render("prof/synthese.html.twig", [
-  'prof'=>$prof
+        'prof'=>$prof
       ]);
-    }
-    public function user()
-    {
-      return $this->getUser();
     }
 }

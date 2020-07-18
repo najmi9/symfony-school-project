@@ -14,41 +14,59 @@ use App\Entity\Month;
 use App\Form\MonthType;
 
 /**
+ * 
  * @IsGranted("ROLE_ADMIN")
  */
-class AddMonthController extends AbstractController
+class MonthController extends AbstractController
 {   
+    /**
+     * @Route("/admin/months", name="admin_months")
+     * @param  MonthRepository $monthRepo [description]
+     * @return [Response]                     [description]
+     */
+    public function months(MonthRepository $monthRepo): Response
+    {
+        return $this->render('admin/payement/months.html.twig', [
+           'months'=>$monthRepo->findAll(),
+        ]);
+    }
+
 	/**
-	 * @Route("/admin/add/month", name="admin_add_month")
-	 * @Route("/admin/add/month/{id}", name="admin_edit_month")
+	 * @Route("/admin/edit/month/{id}", name="admin_edit_month")
+     * @Route("/admin/add/month", name="admin_add_month")
 	 */
-	public function month(Month $month=null, MonthRepository $monthRepo, Request $request, EntityManagerInterface $em) : Response
+	public function month(Month $month=null, Request $request, EntityManagerInterface $em) : Response
 	{ 
 	    if ($month) {
+
 		   $form = $this->createForm(MonthType::class, $month);
 		   $form->handleRequest($request);
+
            if ($form->isSubmitted() && $form->isValid()) {
-           	  $month->setName($form->get('name')->gatDate())
-                    ->setOutputs($form->get('outputs')->gatDate())
-                    ->setInputs($form->get('inputs')->gatDate())
+           	  $month->setName($form->get('name')->getData())
+                    ->setOutputs($form->get('outputs')->getData())
+                    ->setInputs($form->get('inputs')->getData())
            	  ;
+              
         	  $em->persist($month);
         	  $em->flush();
         	  $this->addFlash("info", "Votre mois est bien modifiée !");
-        	  return $this->redirectToRoute('admin_add_month');
+        	  return $this->redirectToRoute('admin_months');
            }
-	    }
-		$month = new Month();
-		$form = $this->createForm(MonthType::class, $month);
-		$form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-        	$em->persist($month);
-        	$em->flush();
-        	$this->addFlash("info", "Votre mois est bien ajouté !");
-        	return $this->redirectToRoute('admin_add_month');
+	    }else{
+		   $month = new Month();
+		   $form = $this->createForm(MonthType::class, $month);
+		   $form->handleRequest($request);
+           if ($form->isSubmitted() && $form->isValid()) {
+        	 $em->persist($month);
+        	 $em->flush();
+        	 $this->addFlash("info", "Votre mois est bien ajouté !");
+        	 return $this->redirectToRoute('admin_months');
+           }
         }
+
 		return $this->render('admin/payement/month.html.twig', [
-         'months'=>$monthRepo->findAll(),
+         'isNew'=>$month->getId()?false: true,
          'monthForm'=>$form->createView()
 		]);
 	}
@@ -57,7 +75,7 @@ class AddMonthController extends AbstractController
      * @Route("/admin/payement/month/remove/{id}", name="admin_remove_month")
      * @param  Moth                   $month [description]
      * @param  EntityManagerInterface $em    [description]
-     * @return [type]                        [description]
+     * @return [Response]                        [description]
      */
 	public function removeMonth(Month $month, EntityManagerInterface $em): Response
 	{

@@ -63,15 +63,15 @@ class Student
     private $classe;
 
     /**
-     * @ORM\OneToOne(targetEntity=Payement::class, mappedBy="student", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity=Payement::class, mappedBy="student")
      */
-    private $payement;
-
+    private $payements;
 
 
     public function __construct()
     {
         $this->notes = new ArrayCollection();
+        $this->payements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -173,21 +173,34 @@ class Student
         return $this;
     }
 
-    public function getPayement(): ?Payement
+    /**
+     * @return Collection|Payement[]
+     */
+    public function getPayements(): Collection
     {
-        return $this->payement;
+        return $this->payements;
     }
 
-    public function setPayement(Payement $payement): self
+    public function addPayement(Payement $payement): self
     {
-        $this->payement = $payement;
-
-        // set the owning side of the relation if necessary
-        if ($payement->getStudent() !== $this) {
+        if (!$this->payements->contains($payement)) {
+            $this->payements[] = $payement;
             $payement->setStudent($this);
         }
 
         return $this;
     }
 
+    public function removePayement(Payement $payement): self
+    {
+        if ($this->payements->contains($payement)) {
+            $this->payements->removeElement($payement);
+            // set the owning side to null (unless already changed)
+            if ($payement->getStudent() === $this) {
+                $payement->setStudent(null);
+            }
+        }
+
+        return $this;
+    }
 }

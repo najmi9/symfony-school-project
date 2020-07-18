@@ -16,12 +16,12 @@ class DepayementType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('prof', EntityType::class, [
-           'class'=>Prof::class,
-           'choice_label' => 'name'
-           
-            ] )
-            ->add('price')
+            ->add('price',null, [
+                'attr'=>[
+                  'placeholder'=>'Le prix de mois du prof'
+                ]
+            
+            ])
             ->add('month', EntityType::class, [
            'class'=>Month::class,
            'choice_label' => 'name'

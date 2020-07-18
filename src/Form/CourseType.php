@@ -22,6 +22,10 @@ class CourseType extends ApplicationType
             ->add('title', TextType::class, $this->getConfiguration("Titre de cours", "Donnez un titre de votre cours ...") )
 
             ->add('picture', FileType::class, [
+                 'attr'=>[
+                            'placeholder'=>'Image de cours'
+                        ],
+
                 'label' => "Une image de cours",
                 'multiple' => false,
                 'mapped' => false,
@@ -29,6 +33,9 @@ class CourseType extends ApplicationType
             ])
             ->add('content', TextareaType::class,  $this->getConfiguration("Contenu de cours", "Donnez un contenu de cours ..."))
             ->add('brochure', FileType::class, [
+                 'attr'=>[
+                            'placeholder'=>'PDF de cours'
+                        ],
                 'label' => 'Brochure (PDF file)',
                 'mapped' => false,
                 'required' => false,

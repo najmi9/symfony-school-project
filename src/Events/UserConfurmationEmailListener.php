@@ -9,7 +9,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 class UserConfurmationEmailListener
 {
-     private $bus;
+    private $bus;
 
     function __construct(MessageBusInterface $bus)
     {

@@ -6,6 +6,7 @@ use App\Repository\DepayementRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=DepayementRepository::class)
@@ -25,26 +26,27 @@ class Depayement
     private $createdAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Prof::class, mappedBy="depayement")
-     */
-    private $prof;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Month::class, inversedBy="depayements")
      * @ORM\JoinColumn(nullable=false)
+     * @Assert\NotNull
+     * @Assert\NotBlank
      */
     private $month;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="float")
+     * @Assert\NotNull
+     * @Assert\NotBlank
+     * @Assert\GreaterThan(value=100)
      */
     private $price;
 
-    public function __construct()
-    {
-        $this->prof = new ArrayCollection();
-    }
+    /**
+     * @ORM\ManyToOne(targetEntity=Prof::class, inversedBy="depayements")
+     */
+    private $prof;
 
+  
     public function getId(): ?int
     {
         return $this->id;
@@ -72,37 +74,6 @@ class Depayement
         return $this;
     }
 
-    /**
-     * @return Collection|Prof[]
-     */
-    public function getProf(): Collection
-    {
-        return $this->prof;
-    }
-
-    public function addProf(Prof $prof): self
-    {
-        if (!$this->prof->contains($prof)) {
-            $this->prof[] = $prof;
-            $prof->setDepayement($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProf(Prof $prof): self
-    {
-        if ($this->prof->contains($prof)) {
-            $this->prof->removeElement($prof);
-            // set the owning side to null (unless already changed)
-            if ($prof->getDepayement() === $this) {
-                $prof->setDepayement(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getMonth(): ?Month
     {
         return $this->month;
@@ -111,6 +82,18 @@ class Depayement
     public function setMonth(?Month $month): self
     {
         $this->month = $month;
+
+        return $this;
+    }
+
+    public function getProf(): ?Prof
+    {
+        return $this->prof;
+    }
+
+    public function setProf(?Prof $prof): self
+    {
+        $this->prof = $prof;
 
         return $this;
     }

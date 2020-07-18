@@ -22,19 +22,21 @@ class DepayementRepository extends ServiceEntityRepository
     // /**
     //  * @return Depayement[] Returns an array of Depayement objects
     //  */
-    /*
-    public function findByExampleField($value)
+    
+    public function findProfsByClasse($classeId)
     {
         return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
+            ->select('d as depayement')
+            ->join('d.prof', 'p')
+            ->join('p.classes', 'c')
+            ->groupBy('c')
+            ->andWhere('c.id = :id')
+            ->setParameter('id', $classeId)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
+    
 
     /*
     public function findOneBySomeField($value): ?Depayement

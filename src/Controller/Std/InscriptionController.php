@@ -39,11 +39,14 @@ class InscriptionController extends AbstractController
     {
       
         if ($stdInfo) {
-           $this->denyAccessUnlessGranted('edit', $stdInfo);
+           
+           $this->denyAccessUnlessGranted('edit', $this->getUser());
+           
               $finStd =  $stdRepo->findOneByStdperinfo($stdInfo);
+
               $form = $this->createForm(StdPerInfoType::class, $stdInfo);
               $form->handleRequest($request);
-       
+         
               if ($form->isSubmitted() && $form->isValid()) {
                    $finStd->setStdperinfo($stdInfo);
                    $manager->persist($stdInfo);

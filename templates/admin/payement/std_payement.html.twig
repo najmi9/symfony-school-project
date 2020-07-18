@@ -11,15 +11,32 @@
     <header>
         <th>Etudiant : </th>
         <th>Mois : </th>
-        <th>Prix : </th>
+        <th>Prix en Dh: </th>
         <th>Date : </th>
-        <th></th>
+        <th>Vérifiée :</th>
     </header>
 
     <body>
         {% for payement in payements %}
         {% if payement.student.classe.name == "MATH" %}
-        {% include "_payement.html.twig" %}
+        <tr>
+    <td>{{ payement.student.user.name }}</td>
+    <td>{{ payement.month.name }}</td>
+    <td>{{ payement.price }}</td>
+    <td>{{ payement.createdAt| date("Y/m/d H:i:s") }}</td>
+    <td>
+        {% if payement.verified %}
+             <a href=" {{ path('admin_verify_payement', {'id':payement.id}) }} " class="btn btn-sm text-success">
+                  <i class="fas fa-toggle-on"></i>
+             </a>
+        {% else %}
+             <a href="{{ path('admin_verify_payement', {'id':payement.id}) }}" class="btn btn-sm text-danger">
+                  <i class="fas fa-toggle-off"></i>
+             </a>
+        {% endif %}
+      
+    </td>
+</tr>
         {% endif %}
 
         {% endfor %}
@@ -30,15 +47,32 @@
     <header>
         <th>Etudiant : </th>
         <th>Mois : </th>
-        <th>Prix : </th>
+        <th>Prix en Dh: </th>
         <th>Date : </th>
-        <th></th>
+        <th>Vérifiée :</th>
     </header>
 
     <body>
         {% for payement in payements %}
         {% if payement.student.classe.name == "PHYS" %}
-        {% include "_payement.html.twig" %}
+        <tr>
+    <td>{{ payement.student.user.name }}</td>
+    <td>{{ payement.month.name }}</td>
+    <td>{{ payement.price }}</td>
+    <td>{{ payement.createdAt| date("Y/m/d H:i:s") }}</td>
+     <td>
+        {% if payement.verified %}
+             <a href=" {{ path('admin_verify_payement', {'id':payement.id}) }} " class="btn btn-sm text-success">
+                  <i class="fas fa-toggle-on"></i>
+             </a>
+        {% else %}
+             <a href="{{ path('admin_verify_payement', {'id':payement.id}) }}" class="btn btn-sm text-danger">
+                  <i class="fas fa-toggle-off"></i>
+             </a>
+        {% endif %}
+      
+    </td>
+</tr>
         {% endif %}
 
         {% endfor %}

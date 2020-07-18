@@ -24,7 +24,7 @@ class ProfDepayementController extends AbstractController
 	}
 		$this->denyAccessUnlessGranted('view', $prof);
 
-		$this->render('prof/depayement.html.twig', [
+		return $this->render('prof/depayement.html.twig', [
           'profDepayement'=>$depayementRepo->findByProf($prof),
 		]);
 	}

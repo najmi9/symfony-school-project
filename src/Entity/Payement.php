@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\PayementRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=PayementRepository::class)
@@ -30,15 +32,24 @@ class Payement
     private $month;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="float")
+     * @Assert\NotNull
+     * @Assert\NotBlank
+     * @Assert\GreaterThan(value=100)
      */
     private $price;
 
     /**
-     * @ORM\OneToOne(targetEntity=Student::class, inversedBy="payement", cascade={"persist", "remove"})
+     * @ORM\ManyToOne(targetEntity=Student::class, inversedBy="payements")
      * @ORM\JoinColumn(nullable=false)
      */
     private $student;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     * @Assert\Type(value="boolean")
+     */
+    private $verified;
 
     public function getId(): ?int
     {
@@ -85,9 +96,21 @@ class Payement
         return $this->student;
     }
 
-    public function setStudent(Student $student): self
+    public function setStudent(?Student $student): self
     {
         $this->student = $student;
+
+        return $this;
+    }
+
+    public function getVerified(): ?bool
+    {
+        return $this->verified;
+    }
+
+    public function setVerified(?bool $verified): self
+    {
+        $this->verified = $verified;
 
         return $this;
     }

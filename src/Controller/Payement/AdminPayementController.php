@@ -16,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class AdminPayementController extends AbstractController
 {
     /**
-     * @Route("/admin/payement/student", name="student_payement")
+     * @Route("/admin/payement/students", name="admin_student_payement")
      * @return Response
      */
     public function std(PayementRepository $payementRepo): Response
@@ -28,7 +28,7 @@ class AdminPayementController extends AbstractController
     }
 
     /**
-     * @Route("/admin/payement/prof", name="prof_payement")
+     * @Route("/admin/depayement/profs", name="admin_prof_depayement")
      * @return Response
      */
     public function prof(DepayementRepository $depayementRepo): Response

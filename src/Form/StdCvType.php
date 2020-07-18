@@ -19,7 +19,13 @@ class StdCvType extends ApplicationType
         $builder
             ->add('city', TextType::class, $this->getConfiguration("Ville d'étude :", "Ville où vous avez étudier 1 bac :..."))
             ->add('school', TextType::class, $this->getConfiguration("Lycée d'étude :", "Lycée où vous avez obtenir 1 bac :..."))
-            ->add('year', DateType::class, $this->getConfiguration("Date d'étude :", "Date quand vous avez obtenir 1 bac :..."))
+            ->add('year', DateType::class, [
+          'years' => range(date('Y')-3, date('Y')-1),
+          'attr'=>[
+            "placeholder"=>"quand vous avez étudié en 1 bac ..."
+             ],
+          'label'=>"Date d'étude :" 
+            ])
             ->add('moyen', NumberType::class, $this->getConfiguration("Moyenne Générale :", "Moyenne Générale :..."))
             ->add('submit', SubmitType::class)
         ;

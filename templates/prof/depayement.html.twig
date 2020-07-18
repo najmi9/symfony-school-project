@@ -20,8 +20,9 @@
  	<table class="table">
  	<header>
  		<th>Mois : </th>
- 		<th>Prix : </th>
+ 		<th>Prix en Dh: </th>
  		<th>Date : </th>
+    <th></th>
  	</header>
  	<body>
  		{% for item in profDepayement %}
@@ -29,6 +30,11 @@
            	<td> {{ item.month.name }} </td>
            	<td> {{ item.price }} </td>
            	<td> {{ item.createdAt | date }} </td>
+            <td> 
+             <a href="" class="text-center text-info">
+                <i class="fas fa-toggle-on"></i>
+             </a>
+            </td>
            </tr>
  		{% endfor %}
  	</body>

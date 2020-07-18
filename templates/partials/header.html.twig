@@ -26,7 +26,13 @@
              <a class="dropdown-item" href="{{ path('student_profile', {'id':
            app.user.student.id }) }}">Mon compte</a>
           <a class="dropdown-item" href="{{ path('student_note', {'id': app.user.student.id} )}}">Mes Notes</a>
-           <a class="dropdown-item" href="{{ path('student_courses_anounces', {'id': app.user.student.id} )}}">Mes Coures et Annonces </a>
+
+           <a class="dropdown-item" href="{{ path('student_courses_anounces', {'id': app.user.student.id} )}}">Mes Coures et Annonces 
+           </a>
+
+            <a class="dropdown-item" href="{{ path('std_payement', {'id': app.user.student.id} )}}">Mes Payements
+           </a>
+
             <a class="dropdown-item" href="{{ path('student_update_password')}}">Editer Password</a>
           <a class="dropdown-item" href="{{ path('app_user_logout') }}">Déconnexion</a>
         </div>

@@ -87,11 +87,9 @@ class Prof implements UserInterface
     private $resetToken;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Depayement::class, inversedBy="prof")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\OneToMany(targetEntity=Depayement::class, mappedBy="prof")
      */
-    private $depayement;
-    
+    private $depayements;
 
     public function __construct()
     {
@@ -99,6 +97,7 @@ class Prof implements UserInterface
         $this->anounces = new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->classes = new ArrayCollection();
+        $this->depayements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -366,14 +365,33 @@ class Prof implements UserInterface
          return $this;
      }
 
-     public function getDepayement(): ?Depayement
+     /**
+      * @return Collection|Depayement[]
+      */
+     public function getDepayements(): Collection
      {
-         return $this->depayement;
+         return $this->depayements;
      }
 
-     public function setDepayement(?Depayement $depayement): self
+     public function addDepayement(Depayement $depayement): self
      {
-         $this->depayement = $depayement;
+         if (!$this->depayements->contains($depayement)) {
+             $this->depayements[] = $depayement;
+             $depayement->setProf($this);
+         }
+
+         return $this;
+     }
+
+     public function removeDepayement(Depayement $depayement): self
+     {
+         if ($this->depayements->contains($depayement)) {
+             $this->depayements->removeElement($depayement);
+             // set the owning side to null (unless already changed)
+             if ($depayement->getProf() === $this) {
+                 $depayement->setProf(null);
+             }
+         }
 
          return $this;
      }

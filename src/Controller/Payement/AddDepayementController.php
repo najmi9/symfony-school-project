@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Depayement;
+use App\Entity\Prof;
 use App\Form\DepayementType;
 
 /**
@@ -19,43 +20,59 @@ use App\Form\DepayementType;
 class AddDepayementController extends AbstractController
 {   
 	/**
-	 * @Route("/admin/add/depayement", name="admin_add_depayement")
-	 * @Route("/admin/add/depayement/{id}", name="admin_edit_depayement")
+	 * @Route("/admin/edit/depayement/{id}", name="admin_edit_depayement")
 	 */
-	public function depayement(Depayement $depayement=null, DepayementRepository $depayementRepo, Request $request, EntityManagerInterface $em) : Response
+	public function depayement(Depayement $depayement, Request $request, EntityManagerInterface $em) : Response
 	{ 
-	    if ($depayement) {
+	    if (!$depayement) {
+        throw new Exception("Depayement not found", 1);
+      }
+
 		   $form = $this->createForm(DepayementType::class, $depayement);
 
 		   $form->handleRequest($request);
            
            if ($form->isSubmitted() && $form->isValid()) {
-           	  $month->setName($form->get('name')->gatDate())
-                    ->setOutputs($form->get('outputs')->gatDate())
-                    ->setInputs($form->get('inputs')->gatDate())
+           	  $depayement
+                        ->setMonth($form->get('month')->gatDate())
+                        ->setPrice($form->get('price')->gatDate())
            	  ;
+
         	  $em->persist($depayement);
         	  $em->flush();
         	  $this->addFlash("info", "Votre depaiement est bien modifiée !");
-        	  return $this->redirectToRoute('admin_add_depayement');
+        	  return $this->redirectToRoute('admin_prof_depayement');
            }
-	    }
+	   
 
-		$depayement = new Depayement();
-		$form = $this->createForm(DepayementType::class, $depayement);
-		$form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-        	$em->persist($depayement);
-        	$em->flush();
-        	$this->addFlash("info", "Votre depaiement est bien ajouté !");
-        	return $this->redirectToRoute('admin_add_depayement');
-        }
 
 		return $this->render('admin/payement/depayement.html.twig', [
-         'depayements'=>$depayementRepo->findAll(),
          'depayementForm'=>$form->createView()
 		]);
 	}
+
+  /**
+   * @Route("/admin/add/depayement/{id}", name="admin_add_depayement")
+   */
+  public function depayProf(Prof $prof, Request $request, EntityManagerInterface $em): Response
+  {
+       $depayement = new Depayement();
+       $form = $this->createForm(DepayementType::class, $depayement);
+       $form->handleRequest($request);
+       if ($form->isSubmitted() && $form->isValid()) {
+            $depayement->setCreatedAt(new \DateTime())
+                       ->setProf($prof)
+            ;
+            $em->persist($depayement);
+            $em->flush();
+            $this->addFlash("info", "Votre depaiement est bien ajouté !");
+            return $this->redirectToRoute('admin_prof_depayement');
+       }
+       return $this->render('admin/payement/depayement.html.twig', [
+         'depayementForm'=>$form->createView()
+    ]);
+  }
+
     
     /**
      * @Route("/admin/payement/depayement/remove/{id}", name="admin_remove_depayement")
@@ -69,6 +86,6 @@ class AddDepayementController extends AbstractController
         $em->remove($depayement);
         $em->flush();
         $this->addFlash("info", "Votre depaiement est bien supprimer !");
-        return $this->redirectToRoute('admin_add_depayement');
+        return $this->redirectToRoute('admin_prof_depayement');
 	}
 }
