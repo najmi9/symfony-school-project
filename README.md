@@ -1,4 +1,5 @@
 # Imad Najmi
+```yaml
  symfony-school-project 
  This is  a php school project I code it using symfony 5 !
  for more inforamtion or explanation, don't hesitate to connect me on : imadnajmi9@gmail.com
